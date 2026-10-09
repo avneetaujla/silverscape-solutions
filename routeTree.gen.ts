@@ -9,23 +9,31 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './src/routes/__root'
-import { Route as SodOrderingRouteImport } from './src/routes/sod-ordering'
+import { Route as SitemapDotxmlRouteImport } from './src/routes/sitemap[.]xml'
+import { Route as RobotsDottxtRouteImport } from './src/routes/robots[.]txt'
 import { Route as PortfolioRouteImport } from './src/routes/portfolio'
 import { Route as ContactRouteImport } from './src/routes/contact'
 import { Route as AboutRouteImport } from './src/routes/about'
 import { Route as IndexRouteImport } from './src/routes/index'
+import { Route as SodOrderingIndexRouteImport } from './src/routes/sod-ordering.index'
 import { Route as ServiceAreasIndexRouteImport } from './src/routes/service-areas.index'
 import { Route as ResourcesIndexRouteImport } from './src/routes/resources.index'
 import { Route as OutdoorServicesIndexRouteImport } from './src/routes/outdoor-services.index'
 import { Route as InteriorRenovationsIndexRouteImport } from './src/routes/interior-renovations.index'
+import { Route as SodOrderingConfirmationRouteImport } from './src/routes/sod-ordering.confirmation'
 import { Route as ServiceAreasCityRouteImport } from './src/routes/service-areas.$city'
 import { Route as ResourcesSlugRouteImport } from './src/routes/resources.$slug'
 import { Route as OutdoorServicesServiceRouteImport } from './src/routes/outdoor-services.$service'
 import { Route as InteriorRenovationsServiceRouteImport } from './src/routes/interior-renovations.$service'
 
-const SodOrderingRoute = SodOrderingRouteImport.update({
-  id: '/sod-ordering',
-  path: '/sod-ordering',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortfolioRoute = PortfolioRouteImport.update({
@@ -46,6 +54,11 @@ const AboutRoute = AboutRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SodOrderingIndexRoute = SodOrderingIndexRouteImport.update({
+  id: '/sod-ordering/',
+  path: '/sod-ordering/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServiceAreasIndexRoute = ServiceAreasIndexRouteImport.update({
@@ -69,6 +82,11 @@ const InteriorRenovationsIndexRoute =
     path: '/interior-renovations/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const SodOrderingConfirmationRoute = SodOrderingConfirmationRouteImport.update({
+  id: '/sod-ordering/confirmation',
+  path: '/sod-ordering/confirmation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServiceAreasCityRoute = ServiceAreasCityRouteImport.update({
   id: '/service-areas/$city',
   path: '/service-areas/$city',
@@ -96,30 +114,36 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/portfolio': typeof PortfolioRoute
-  '/sod-ordering': typeof SodOrderingRoute
+  '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/interior-renovations/$service': typeof InteriorRenovationsServiceRoute
   '/outdoor-services/$service': typeof OutdoorServicesServiceRoute
   '/resources/$slug': typeof ResourcesSlugRoute
   '/service-areas/$city': typeof ServiceAreasCityRoute
+  '/sod-ordering/confirmation': typeof SodOrderingConfirmationRoute
   '/interior-renovations/': typeof InteriorRenovationsIndexRoute
   '/outdoor-services/': typeof OutdoorServicesIndexRoute
   '/resources/': typeof ResourcesIndexRoute
   '/service-areas/': typeof ServiceAreasIndexRoute
+  '/sod-ordering/': typeof SodOrderingIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/portfolio': typeof PortfolioRoute
-  '/sod-ordering': typeof SodOrderingRoute
+  '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/interior-renovations/$service': typeof InteriorRenovationsServiceRoute
   '/outdoor-services/$service': typeof OutdoorServicesServiceRoute
   '/resources/$slug': typeof ResourcesSlugRoute
   '/service-areas/$city': typeof ServiceAreasCityRoute
+  '/sod-ordering/confirmation': typeof SodOrderingConfirmationRoute
   '/interior-renovations': typeof InteriorRenovationsIndexRoute
   '/outdoor-services': typeof OutdoorServicesIndexRoute
   '/resources': typeof ResourcesIndexRoute
   '/service-areas': typeof ServiceAreasIndexRoute
+  '/sod-ordering': typeof SodOrderingIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -127,15 +151,18 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/portfolio': typeof PortfolioRoute
-  '/sod-ordering': typeof SodOrderingRoute
+  '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/interior-renovations/$service': typeof InteriorRenovationsServiceRoute
   '/outdoor-services/$service': typeof OutdoorServicesServiceRoute
   '/resources/$slug': typeof ResourcesSlugRoute
   '/service-areas/$city': typeof ServiceAreasCityRoute
+  '/sod-ordering/confirmation': typeof SodOrderingConfirmationRoute
   '/interior-renovations/': typeof InteriorRenovationsIndexRoute
   '/outdoor-services/': typeof OutdoorServicesIndexRoute
   '/resources/': typeof ResourcesIndexRoute
   '/service-areas/': typeof ServiceAreasIndexRoute
+  '/sod-ordering/': typeof SodOrderingIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -144,45 +171,54 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/portfolio'
-    | '/sod-ordering'
+    | '/robots.txt'
+    | '/sitemap.xml'
     | '/interior-renovations/$service'
     | '/outdoor-services/$service'
     | '/resources/$slug'
     | '/service-areas/$city'
+    | '/sod-ordering/confirmation'
     | '/interior-renovations/'
     | '/outdoor-services/'
     | '/resources/'
     | '/service-areas/'
+    | '/sod-ordering/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/contact'
     | '/portfolio'
-    | '/sod-ordering'
+    | '/robots.txt'
+    | '/sitemap.xml'
     | '/interior-renovations/$service'
     | '/outdoor-services/$service'
     | '/resources/$slug'
     | '/service-areas/$city'
+    | '/sod-ordering/confirmation'
     | '/interior-renovations'
     | '/outdoor-services'
     | '/resources'
     | '/service-areas'
+    | '/sod-ordering'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/contact'
     | '/portfolio'
-    | '/sod-ordering'
+    | '/robots.txt'
+    | '/sitemap.xml'
     | '/interior-renovations/$service'
     | '/outdoor-services/$service'
     | '/resources/$slug'
     | '/service-areas/$city'
+    | '/sod-ordering/confirmation'
     | '/interior-renovations/'
     | '/outdoor-services/'
     | '/resources/'
     | '/service-areas/'
+    | '/sod-ordering/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -190,24 +226,34 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   PortfolioRoute: typeof PortfolioRoute
-  SodOrderingRoute: typeof SodOrderingRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   InteriorRenovationsServiceRoute: typeof InteriorRenovationsServiceRoute
   OutdoorServicesServiceRoute: typeof OutdoorServicesServiceRoute
   ResourcesSlugRoute: typeof ResourcesSlugRoute
   ServiceAreasCityRoute: typeof ServiceAreasCityRoute
+  SodOrderingConfirmationRoute: typeof SodOrderingConfirmationRoute
   InteriorRenovationsIndexRoute: typeof InteriorRenovationsIndexRoute
   OutdoorServicesIndexRoute: typeof OutdoorServicesIndexRoute
   ResourcesIndexRoute: typeof ResourcesIndexRoute
   ServiceAreasIndexRoute: typeof ServiceAreasIndexRoute
+  SodOrderingIndexRoute: typeof SodOrderingIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sod-ordering': {
-      id: '/sod-ordering'
-      path: '/sod-ordering'
-      fullPath: '/sod-ordering'
-      preLoaderRoute: typeof SodOrderingRouteImport
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portfolio': {
@@ -238,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sod-ordering/': {
+      id: '/sod-ordering/'
+      path: '/sod-ordering'
+      fullPath: '/sod-ordering/'
+      preLoaderRoute: typeof SodOrderingIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/service-areas/': {
       id: '/service-areas/'
       path: '/service-areas'
@@ -264,6 +317,13 @@ declare module '@tanstack/react-router' {
       path: '/interior-renovations'
       fullPath: '/interior-renovations/'
       preLoaderRoute: typeof InteriorRenovationsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sod-ordering/confirmation': {
+      id: '/sod-ordering/confirmation'
+      path: '/sod-ordering/confirmation'
+      fullPath: '/sod-ordering/confirmation'
+      preLoaderRoute: typeof SodOrderingConfirmationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/service-areas/$city': {
@@ -302,15 +362,18 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   PortfolioRoute: PortfolioRoute,
-  SodOrderingRoute: SodOrderingRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   InteriorRenovationsServiceRoute: InteriorRenovationsServiceRoute,
   OutdoorServicesServiceRoute: OutdoorServicesServiceRoute,
   ResourcesSlugRoute: ResourcesSlugRoute,
   ServiceAreasCityRoute: ServiceAreasCityRoute,
+  SodOrderingConfirmationRoute: SodOrderingConfirmationRoute,
   InteriorRenovationsIndexRoute: InteriorRenovationsIndexRoute,
   OutdoorServicesIndexRoute: OutdoorServicesIndexRoute,
   ResourcesIndexRoute: ResourcesIndexRoute,
   ServiceAreasIndexRoute: ServiceAreasIndexRoute,
+  SodOrderingIndexRoute: SodOrderingIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

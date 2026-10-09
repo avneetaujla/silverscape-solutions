@@ -1,15 +1,19 @@
 @import "tailwindcss" source(none);
-@source "../src";
+@source "./src";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
+/* ───────────────────────── Tokens ───────────────────────── */
+
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
+  /* Architectural radii: crisp, never pill-like. Buttons and fields use md,
+     panels and imagery use lg, cards use xl. */
+  --radius-sm: 0.1875rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.375rem;
+  --radius-xl: 0.5rem;
+  --radius-2xl: 0.625rem;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -31,99 +35,75 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --color-cream: var(--cream);
-  --color-stone-warm: var(--stone-warm);
-  --color-forest: var(--forest);
+  --color-ink: var(--ink);
   --color-forest-deep: var(--forest-deep);
+  --color-forest-panel: var(--forest-panel);
+  --color-forest: var(--forest);
+  --color-moss: var(--moss);
+  --color-cream: var(--cream);
+  --color-paper: var(--paper);
+  --color-stone-warm: var(--stone-warm);
+  --color-stone-deep: var(--stone-deep);
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
+  --color-bronze: var(--bronze);
+  --color-error: var(--error);
+  --color-error-light: var(--error-light);
 
-  --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 :root {
-  --radius: 1.125rem;
+  /* Brand palette */
+  --ink: oklch(0.145 0.014 160); /* near-black green — page base */
+  --forest-deep: oklch(0.185 0.022 158); /* deep forest sections */
+  --forest-panel: oklch(0.225 0.026 158); /* raised panels on dark */
+  --forest: oklch(0.33 0.05 156); /* text/accents on light surfaces only */
+  --moss: oklch(0.44 0.06 150);
+  --cream: oklch(0.965 0.012 85);
+  --paper: oklch(0.985 0.006 85);
+  --stone-warm: oklch(0.915 0.02 78);
+  --stone-deep: oklch(0.84 0.026 74);
+  --gold: oklch(0.8 0.075 82); /* champagne — accents on dark only */
+  --gold-soft: oklch(0.87 0.05 84);
+  --bronze: oklch(0.5 0.075 68); /* accent text on light surfaces (AA) */
+  --error: oklch(0.8 0.11 30);
+  --error-light: oklch(0.5 0.17 28);
 
-  /* Brand */
-  --forest-deep: oklch(0.18 0.025 155);
-  --forest: oklch(0.32 0.05 155);
-  --cream: oklch(0.96 0.012 85);
-  --stone-warm: oklch(0.88 0.015 85);
-  --gold: oklch(0.78 0.12 85);
-  --gold-soft: oklch(0.85 0.08 85);
+  --radius: 0.375rem;
 
-  /* Dark by default - cinematic premium */
-  --background: oklch(0.13 0.015 155);
-  --foreground: oklch(0.96 0.012 85);
-  --card: oklch(0.18 0.02 155);
-  --card-foreground: oklch(0.96 0.012 85);
-  --popover: oklch(0.18 0.02 155);
-  --popover-foreground: oklch(0.96 0.012 85);
-  --primary: oklch(0.78 0.12 85);
-  --primary-foreground: oklch(0.18 0.025 155);
-  --secondary: oklch(0.22 0.025 155);
-  --secondary-foreground: oklch(0.96 0.012 85);
-  --muted: oklch(0.22 0.02 155);
-  --muted-foreground: oklch(0.72 0.015 85);
-  --accent: oklch(0.78 0.12 85);
-  --accent-foreground: oklch(0.18 0.025 155);
-  --destructive: oklch(0.65 0.2 25);
-  --destructive-foreground: oklch(0.96 0.012 85);
-  --border: oklch(0.96 0.012 85 / 0.12);
-  --input: oklch(0.96 0.012 85 / 0.15);
-  --ring: oklch(0.78 0.12 85);
-  --chart-1: oklch(0.78 0.12 85);
-  --chart-2: oklch(0.55 0.08 155);
-  --chart-3: oklch(0.45 0.05 155);
-  --chart-4: oklch(0.85 0.08 85);
-  --chart-5: oklch(0.32 0.05 155);
-  --sidebar: oklch(0.13 0.015 155);
-  --sidebar-foreground: oklch(0.96 0.012 85);
-  --sidebar-primary: oklch(0.78 0.12 85);
-  --sidebar-primary-foreground: oklch(0.18 0.025 155);
-  --sidebar-accent: oklch(0.22 0.025 155);
-  --sidebar-accent-foreground: oklch(0.96 0.012 85);
-  --sidebar-border: oklch(0.96 0.012 85 / 0.1);
-  --sidebar-ring: oklch(0.78 0.12 85);
+  /* shadcn/ui mappings */
+  --background: var(--ink);
+  --foreground: var(--cream);
+  --card: var(--forest-panel);
+  --card-foreground: var(--cream);
+  --popover: var(--forest-panel);
+  --popover-foreground: var(--cream);
+  --primary: var(--gold);
+  --primary-foreground: var(--forest-deep);
+  --secondary: var(--forest-panel);
+  --secondary-foreground: var(--cream);
+  --muted: var(--forest-panel);
+  --muted-foreground: oklch(0.8 0.015 85);
+  --accent: var(--gold);
+  --accent-foreground: var(--forest-deep);
+  --destructive: oklch(0.6 0.18 27);
+  --destructive-foreground: var(--cream);
+  --border: oklch(0.965 0.012 85 / 0.12);
+  --input: oklch(0.965 0.012 85 / 0.18);
+  --ring: var(--gold);
 
-  /* Premium effects */
-  --gradient-hero: linear-gradient(
-    180deg,
-    oklch(0.13 0.015 155 / 0.4) 0%,
-    oklch(0.1 0.015 155 / 0.85) 100%
-  );
-  --gradient-gold: linear-gradient(
-    135deg,
-    oklch(0.82 0.12 85),
-    oklch(0.72 0.13 80)
-  );
-  --gradient-forest: linear-gradient(
-    135deg,
-    oklch(0.2 0.03 155),
-    oklch(0.13 0.015 155)
-  );
-  --shadow-luxe: 0 20px 60px -20px oklch(0 0 0 / 0.6);
-  --shadow-gold: 0 10px 40px -10px oklch(0.78 0.12 85 / 0.35);
-  --shadow-card: 0 24px 64px -34px oklch(0 0 0 / 0.72);
-  --shadow-card-hover: 0 28px 80px -36px oklch(0 0 0 / 0.82);
-  --shadow-focus:
-    0 0 0 1px oklch(0.78 0.12 85 / 0.7), 0 0 0 4px oklch(0.78 0.12 85 / 0.16);
-  --surface-glass-dark: oklch(0.18 0.02 155 / 0.62);
-  --surface-glass-light: oklch(0.96 0.012 85 / 0.88);
-  --radius-card: calc(var(--radius) + 0.25rem);
-  --radius-button: calc(var(--radius) - 0.125rem);
-  --section-space: clamp(5rem, 8vw, 8rem);
-  --section-space-compact: clamp(4.5rem, 7vw, 6.5rem);
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.08), 0 12px 32px -16px oklch(0.2 0.03 158 / 0.22);
+  --shadow-lift: 0 2px 4px oklch(0 0 0 / 0.1), 0 24px 48px -24px oklch(0.15 0.03 158 / 0.35);
+  --shadow-dark: 0 24px 60px -30px oklch(0 0 0 / 0.7);
+
+  --header-h: 4.75rem;
 }
 
-@font-face {
-  font-family: "Cormorant Garamond";
-  src: url("https://fonts.gstatic.com/s/cormorantgaramond/v16/co3bmX5slCNuHLi8bLeY9MK7whWMhyjornFLsS6V7w.woff2")
-    format("woff2");
-  font-weight: 400 700;
-  font-display: swap;
-}
+/* Font files are loaded via <link> tags in src/routes/__root.tsx. */
+
+/* ───────────────────────── Base ───────────────────────── */
 
 @layer base {
   * {
@@ -131,197 +111,558 @@
   }
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+    -webkit-text-size-adjust: 100%;
   }
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background-color: var(--ink);
+    color: var(--cream);
     font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
-    font-feature-settings: "ss01", "cv11";
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
   h1,
   h2,
   h3,
-  h4,
-  .font-serif {
+  h4 {
     font-family: var(--font-serif);
     font-weight: 500;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.012em;
+    /* Balance gives even, editorial line lengths but ignores meaning, so
+       heading text goes through typeset() (src/lib/typeset.tsx), which keeps
+       connector words and names together with `keep-phrase` spans. */
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  :focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .on-light :focus-visible,
+  .on-light:focus-visible {
+    outline-color: var(--forest);
   }
   ::selection {
-    background: oklch(0.78 0.12 85 / 0.22);
-    color: var(--foreground);
+    background: oklch(0.8 0.075 82 / 0.35);
+    color: var(--forest-deep);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-@layer utilities {
-  .section-shell {
-    margin-inline: auto;
-    max-width: 1400px;
-    padding-inline: clamp(1.25rem, 4vw, 4rem);
-  }
-  .section-space {
-    padding-block: var(--section-space);
-  }
-  .section-space-compact {
-    padding-block: var(--section-space-compact);
-  }
-  .glass-card {
-    background: var(--surface-glass-dark);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid oklch(0.96 0.012 85 / 0.12);
-    border-radius: var(--radius-card);
-    box-shadow: var(--shadow-card);
-    overflow: hidden;
-  }
-  .glass-card-light {
-    background: var(--surface-glass-light);
-    backdrop-filter: blur(14px);
-    border: 1px solid oklch(0.18 0.025 155 / 0.08);
-    border-radius: var(--radius-card);
-    box-shadow: 0 22px 64px -38px oklch(0.16 0.02 155 / 0.24);
-    overflow: hidden;
-  }
-  .premium-card {
-    border-radius: var(--radius-card);
-    border: 1px solid oklch(0.96 0.012 85 / 0.12);
-    background: oklch(0.18 0.02 155 / 0.34);
-    box-shadow: var(--shadow-card);
-    overflow: hidden;
-  }
-  .premium-card-light {
-    border-radius: var(--radius-card);
-    border: 1px solid oklch(0.18 0.025 155 / 0.08);
-    background: oklch(0.96 0.012 85 / 0.96);
-    box-shadow: 0 22px 64px -38px oklch(0.16 0.02 155 / 0.24);
-    overflow: hidden;
-  }
-  .premium-card-interactive {
-    transition:
-      transform 280ms ease,
-      border-color 280ms ease,
-      box-shadow 280ms ease,
-      color 280ms ease,
-      background-color 280ms ease;
-  }
-  .premium-card-interactive:hover {
-    transform: translateY(-2px);
-    border-color: oklch(0.78 0.12 85 / 0.34);
-    box-shadow: var(--shadow-card-hover);
-  }
-  .premium-faq {
-    border-radius: var(--radius-card);
-    border: 1px solid oklch(0.96 0.012 85 / 0.12);
-    background: oklch(0.18 0.02 155 / 0.32);
-    box-shadow: var(--shadow-card);
-    padding: 1.75rem;
-  }
-  .premium-faq-light {
-    border-color: oklch(0.18 0.025 155 / 0.08);
-    background: oklch(0.96 0.012 85 / 0.96);
-    box-shadow: 0 20px 56px -36px oklch(0.16 0.02 155 / 0.2);
-  }
-  .premium-input {
-    min-height: 3.25rem;
+/* ───────────────────────── Layout ───────────────────────── */
+
+@layer components {
+  .container-site {
     width: 100%;
-    border-radius: var(--radius-button);
-    border: 1px solid oklch(0.96 0.012 85 / 0.16);
-    background: oklch(0.96 0.012 85 / 0.03);
-    padding: 0.875rem 1rem;
+    max-width: 82rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+  }
+  .container-prose {
+    width: 100%;
+    max-width: 46rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 2rem);
+  }
+  .section {
+    padding-block: clamp(4.5rem, 9vw, 7.5rem);
+  }
+  .section-sm {
+    padding-block: clamp(3.5rem, 6vw, 5rem);
+  }
+
+  /* Surfaces — every surface sets its own readable text colour. */
+  .surface-ink {
+    background-color: var(--ink);
     color: var(--cream);
-    transition:
-      border-color 220ms ease,
-      box-shadow 220ms ease,
-      background-color 220ms ease;
   }
-  .premium-input::placeholder {
-    color: oklch(0.96 0.012 85 / 0.34);
+  .surface-forest {
+    background-color: var(--forest-deep);
+    color: var(--cream);
   }
-  .premium-input:focus {
-    outline: none;
-    border-color: var(--gold);
-    box-shadow: var(--shadow-focus);
-    background: oklch(0.96 0.012 85 / 0.05);
+  .surface-cream {
+    background-color: var(--cream);
+    color: var(--forest-deep);
   }
-  .premium-textarea {
-    min-height: 8.75rem;
-    resize: vertical;
+  .surface-stone {
+    background-color: var(--stone-warm);
+    color: var(--forest-deep);
   }
-  .premium-link {
+  .surface-paper {
+    background-color: var(--paper);
+    color: var(--forest-deep);
+  }
+
+  /* ─── Type ─── */
+  .type-display {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2.75rem, 1.55rem + 4.4vw, 5.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.018em;
+  }
+  .type-h1 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2.5rem, 1.75rem + 3vw, 4.25rem);
+    line-height: 1.04;
+    letter-spacing: -0.015em;
+  }
+  .type-h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2.05rem, 1.5rem + 2.1vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.012em;
+  }
+  .type-h3 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(1.45rem, 1.25rem + 0.6vw, 1.8rem);
+    line-height: 1.18;
+  }
+  .type-h4 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 1.3rem;
+    line-height: 1.25;
+  }
+  .type-lead {
+    font-size: clamp(1.075rem, 1rem + 0.35vw, 1.25rem);
+    line-height: 1.6;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.7;
+  }
+  .eyebrow-plain::before {
+    display: none;
+  }
+  .on-light .eyebrow,
+  .eyebrow.on-light {
+    color: var(--bronze);
+  }
+  .accent-serif {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .on-light .accent-serif {
+    color: var(--forest);
+  }
+  .measure {
+    max-width: 62ch;
+  }
+
+  /* ─── Links ─── */
+  .link-arrow {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.2;
     color: var(--gold);
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    transition:
-      color 220ms ease,
-      gap 220ms ease,
-      transform 220ms ease;
+    text-decoration: none;
+    transition: gap 200ms ease, color 200ms ease;
   }
-  .premium-link:hover {
-    gap: 0.7rem;
+  .link-arrow svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    translate: 0 0.5px;
   }
-  .premium-kicker {
-    font-size: 0.68rem;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    font-weight: 500;
+  .link-arrow:hover {
+    gap: 0.75rem;
+    color: var(--gold-soft);
+    text-decoration: none;
   }
-  .text-gold {
-    color: var(--gold);
-  }
-  .bg-forest-deep {
-    background-color: var(--forest-deep);
-  }
-  .bg-forest {
-    background-color: var(--forest);
-  }
-  .bg-cream {
-    background-color: var(--cream);
-  }
-  .bg-stone-warm {
-    background-color: var(--stone-warm);
-  }
-  .text-cream {
-    color: var(--cream);
-  }
-  .text-forest {
+  .on-light .link-arrow {
     color: var(--forest);
   }
-  .text-forest-deep {
+  .on-light .link-arrow:hover {
     color: var(--forest-deep);
   }
-  .border-gold {
-    border-color: var(--gold);
-  }
-  .gradient-gold-text {
-    background: var(--gradient-gold);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .container-px {
-    padding-left: clamp(1.25rem, 4vw, 4rem);
-    padding-right: clamp(1.25rem, 4vw, 4rem);
-  }
-  .eyebrow {
-    font-size: 0.68rem;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    font-weight: 500;
+  .link-inline {
     color: var(--gold);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
   }
-  .hero-overlay {
-    background: var(--gradient-hero);
+  .on-light .link-inline {
+    color: var(--forest);
   }
-  .luxe-shadow {
-    box-shadow: var(--shadow-luxe);
+
+  /* ─── Cards ─── */
+  .card-dark {
+    background: var(--forest-panel);
+    border: 1px solid oklch(0.965 0.012 85 / 0.1);
+    border-radius: var(--radius-xl);
+    color: var(--cream);
   }
-  .gold-shadow {
-    box-shadow: var(--shadow-gold);
+  .card-light {
+    background: var(--paper);
+    border: 1px solid oklch(0.185 0.022 158 / 0.16);
+    border-radius: var(--radius-xl);
+    color: var(--forest-deep);
   }
+  .card-stone {
+    background: var(--stone-warm);
+    border: 1px solid oklch(0.185 0.022 158 / 0.08);
+    border-radius: var(--radius-xl);
+    color: var(--forest-deep);
+  }
+  .card-interactive {
+    transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
+  }
+  .card-interactive:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+  .card-dark.card-interactive:hover {
+    border-color: oklch(0.8 0.075 82 / 0.4);
+    box-shadow: var(--shadow-dark);
+  }
+  .media-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--forest-panel);
+  }
+  .media-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .group:hover .media-zoom {
+    transform: scale(1.035);
+  }
+  .scrim-bottom {
+    background: linear-gradient(
+      to top,
+      oklch(0.145 0.014 160 / 0.92) 0%,
+      oklch(0.145 0.014 160 / 0.55) 45%,
+      oklch(0.145 0.014 160 / 0) 100%
+    );
+  }
+
+  /* ─── Badges ─── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: var(--radius-sm);
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+  }
+  .badge-dark {
+    background: oklch(0.145 0.014 160 / 0.82);
+    color: var(--cream);
+    border: 1px solid oklch(0.965 0.012 85 / 0.16);
+  }
+  .badge-light {
+    background: var(--stone-warm);
+    color: var(--forest-deep);
+  }
+  .badge-gold {
+    background: var(--gold);
+    color: var(--forest-deep);
+    border: 1px solid var(--gold);
+  }
+
+  /* ─── Lists ─── */
+  .list-check li {
+    position: relative;
+    padding-left: 1.6rem;
+  }
+  .list-check li::before {
+    content: "";
+    position: absolute;
+    left: 0.15rem;
+    top: 0.62em;
+    width: 0.55rem;
+    height: 0.3rem;
+    border-left: 1.5px solid var(--gold);
+    border-bottom: 1.5px solid var(--gold);
+    transform: rotate(-45deg);
+  }
+  .on-light .list-check li::before {
+    border-color: var(--forest);
+  }
+
+  /* ─── Forms ─── */
+  .field-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.45rem;
+    color: var(--cream);
+  }
+  .on-light .field-label {
+    color: var(--forest-deep);
+  }
+  .field-hint {
+    font-size: 0.8125rem;
+    margin-top: 0.4rem;
+    color: oklch(0.965 0.012 85 / 0.68);
+  }
+  .on-light .field-hint {
+    color: oklch(0.185 0.022 158 / 0.68);
+  }
+  .field-error {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    margin-top: 0.4rem;
+    color: var(--error);
+  }
+  .on-light .field-error {
+    color: var(--error-light);
+  }
+  .field-control {
+    display: block;
+    width: 100%;
+    min-height: 3rem;
+    border-radius: var(--radius-md);
+    border: 1px solid oklch(0.965 0.012 85 / 0.2);
+    background: oklch(0.145 0.014 160 / 0.6);
+    padding: 0.75rem 0.95rem;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--cream);
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+  }
+  .field-control::placeholder {
+    color: oklch(0.965 0.012 85 / 0.45);
+  }
+  .field-control:hover {
+    border-color: oklch(0.965 0.012 85 / 0.32);
+  }
+  .field-control:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px oklch(0.8 0.075 82 / 0.25);
+  }
+  .field-control[aria-invalid="true"] {
+    border-color: var(--error);
+  }
+  .on-light .field-control {
+    background: var(--paper);
+    color: var(--forest-deep);
+    border-color: oklch(0.185 0.022 158 / 0.22);
+  }
+  .on-light .field-control::placeholder {
+    color: oklch(0.185 0.022 158 / 0.45);
+  }
+  .on-light .field-control:hover {
+    border-color: oklch(0.185 0.022 158 / 0.38);
+  }
+  .on-light .field-control:focus {
+    border-color: var(--forest);
+    box-shadow: 0 0 0 3px oklch(0.33 0.05 156 / 0.18);
+  }
+  .on-light .field-control[aria-invalid="true"] {
+    border-color: var(--error-light);
+  }
+  select.field-control {
+    appearance: none;
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23d9cfb8' stroke-width='1.5'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+  }
+  .on-light select.field-control {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%232b4536' stroke-width='1.5'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+  }
+  select.field-control option {
+    background: var(--forest-deep);
+    color: var(--cream);
+  }
+  textarea.field-control {
+    min-height: 8.5rem;
+    resize: vertical;
+  }
+
+  /* Segmented choice (radio cards) */
+  .choice {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    border-radius: var(--radius-md);
+    border: 1px solid oklch(0.965 0.012 85 / 0.2);
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: border-color 180ms ease, background-color 180ms ease;
+  }
+  .choice:hover {
+    border-color: oklch(0.965 0.012 85 / 0.36);
+  }
+  .choice:has(input:checked) {
+    border-color: var(--gold);
+    background: oklch(0.8 0.075 82 / 0.1);
+  }
+  .choice:has(input:focus-visible) {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .choice input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ─── Hero ─── */
+  .hero-scrim {
+    background:
+      linear-gradient(
+        90deg,
+        oklch(0.145 0.014 160 / 0.9) 0%,
+        oklch(0.145 0.014 160 / 0.62) 45%,
+        oklch(0.145 0.014 160 / 0.2) 100%
+      ),
+      linear-gradient(to top, oklch(0.145 0.014 160 / 0.85) 0%, oklch(0.145 0.014 160 / 0) 45%);
+  }
+  .hero-scrim-even {
+    background:
+      linear-gradient(to top, oklch(0.145 0.014 160 / 0.94) 0%, oklch(0.145 0.014 160 / 0.6) 55%, oklch(0.145 0.014 160 / 0.45) 100%);
+  }
+
+  /* Imageless surface: deep forest field with faint survey-style contour lines. */
+  .surface-contour {
+    background-color: var(--ink);
+    background-image:
+      radial-gradient(ellipse 70% 80% at 92% 8%, oklch(0.3 0.045 156 / 0.7), transparent 70%),
+      radial-gradient(ellipse 55% 60% at 0% 100%, oklch(0.8 0.075 82 / 0.07), transparent 70%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600' fill='none' stroke='%23d4bd85' stroke-opacity='.13'%3E%3Cg transform='rotate(-14 400 300)'%3E%3Cpath d='M40 310c20-140 190-250 400-240s330 120 320 250-170 220-380 210S20 450 40 310z'/%3E%3Cpath d='M100 306c18-112 160-196 336-190s272 98 264 200-142 178-316 170S82 418 100 306z'/%3E%3Cpath d='M162 302c14-84 128-146 268-142s216 76 210 152-112 134-252 128-240-54-226-138z'/%3E%3Cpath d='M226 298c10-58 96-100 204-96s160 54 156 106-84 92-190 88-180-40-170-98z'/%3E%3Cpath d='M292 294c6-32 62-56 136-54s106 32 102 62-54 52-126 50-118-26-112-58z'/%3E%3Cpath d='M356 291c2-12 30-22 68-21s52 14 50 26-26 22-62 21-58-12-56-26z'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: auto, auto, max(56rem, 90%) auto;
+    background-position: center, center, right -12rem top -8rem;
+    background-repeat: no-repeat;
+    color: var(--cream);
+  }
+
+  /* ─── Rules ─── */
+  .rule {
+    height: 1px;
+    background: oklch(0.965 0.012 85 / 0.12);
+  }
+  .on-light .rule {
+    background: oklch(0.185 0.022 158 / 0.12);
+  }
+
+  .faq-list > details {
+    border-bottom: 1px solid oklch(0.965 0.012 85 / 0.12);
+  }
+  .faq-list {
+    border-top: 1px solid oklch(0.965 0.012 85 / 0.12);
+  }
+  .on-light .faq-list,
+  .on-light .faq-list > details {
+    border-color: oklch(0.185 0.022 158 / 0.14);
+  }
+
+  /* ─── Prose (articles) ─── */
+  .prose-article {
+    color: oklch(0.185 0.022 158 / 0.86);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+  .prose-article h2 {
+    font-size: clamp(1.6rem, 1.35rem + 0.9vw, 2.05rem);
+    line-height: 1.15;
+    color: var(--forest-deep);
+    margin-top: 2.75rem;
+    margin-bottom: 0.9rem;
+  }
+  .prose-article p + p {
+    margin-top: 1.1rem;
+  }
+  .prose-article ul {
+    margin-top: 1rem;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .prose-article li {
+    position: relative;
+    padding-left: 1.4rem;
+  }
+  .prose-article li::before {
+    content: "";
+    position: absolute;
+    left: 0.2rem;
+    top: 0.72em;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: var(--bronze);
+  }
+
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    z-index: 100;
+    border-radius: var(--radius-sm);
+    background: var(--gold);
+    color: var(--forest-deep);
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    transition: top 160ms ease;
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+}
+
+/* Registered as utilities so variants like [.on-light_&]:text-muted-light apply. */
+@utility text-muted-dark {
+  color: oklch(0.965 0.012 85 / 0.76);
+}
+@utility text-muted-light {
+  color: oklch(0.185 0.022 158 / 0.74);
+}
+
+/* Keeps a phrase on one line (product, place and service names). Use with a
+   breakpoint, e.g. `sm:keep-phrase`, wherever the phrase could exceed a
+   narrow phone column. */
+@utility keep-phrase {
+  white-space: nowrap;
 }

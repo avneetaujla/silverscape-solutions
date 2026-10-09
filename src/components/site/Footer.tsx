@@ -1,150 +1,158 @@
 import { Link } from "@tanstack/react-router";
-import { Phone, Mail, MapPin } from "lucide-react";
-import { CTA } from "./CTA";
+import { Mail, MapPin, Phone } from "lucide-react";
+import { Logo } from "@/components/site/Logo";
+import { CTA } from "@/components/site/CTA";
+import { INTERIOR, OUTDOOR, servicePath } from "@/lib/services-data";
+import { PRIMARY_LOCATIONS, GTA_CITIES } from "@/lib/locations-data";
+import { BUSINESS } from "@/lib/site";
+
+const linkCls =
+  "text-cream/80 hover:text-cream underline-offset-4 hover:underline";
 
 export function Footer() {
   return (
-    <footer className="bg-forest-deep border-t border-cream/10">
-      <div className="section-shell py-16 grid gap-12 md:grid-cols-2 lg:grid-cols-4">
-        <div>
-          <div className="font-serif text-2xl text-cream">SilverScape</div>
-          <div className="premium-kicker mt-1 text-gold">Solutions</div>
-          <p className="mt-5 text-sm text-cream/65 leading-relaxed max-w-xs">
-            Premium outdoor and interior renovations across Southern Ontario.
-            Clear pricing. Cleaner execution.
-          </p>
-        </div>
+    <footer className="surface-forest border-t border-cream/10">
+      <div className="container-site py-16 md:py-20">
+        <div className="grid gap-12 lg:grid-cols-[1.2fr_2fr]">
+          <div>
+            <Logo />
+            <p className="mt-6 max-w-sm text-cream/80">
+              Outdoor transformations, interior renovations and Kentucky
+              Bluegrass sod delivery for homes across Guelph,
+              Kitchener-Waterloo, Cambridge and the GTA.
+            </p>
+            <ul className="mt-8 space-y-3 text-[0.9375rem]">
+              <li>
+                <a
+                  href={BUSINESS.phoneHref}
+                  className="inline-flex min-h-11 items-center gap-3 text-cream hover:text-gold"
+                >
+                  <Phone aria-hidden className="h-4 w-4 text-gold" />
+                  {BUSINESS.phoneDisplay}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={BUSINESS.emailHref}
+                  className="inline-flex min-h-11 items-center gap-3 break-all text-cream hover:text-gold"
+                >
+                  <Mail aria-hidden className="h-4 w-4 shrink-0 text-gold" />
+                  {BUSINESS.email}
+                </a>
+              </li>
+              <li className="flex items-center gap-3 text-cream/80">
+                <MapPin aria-hidden className="h-4 w-4 text-gold" />
+                Based in Guelph, Ontario
+              </li>
+            </ul>
+            <CTA
+              to="/contact"
+              className="mt-8"
+              track="request_quote_click"
+              trackLabel="footer"
+            >
+              Request a Quote
+            </CTA>
+          </div>
 
-        <div>
-          <h4 className="eyebrow mb-4">Outdoor</h4>
-          <ul className="space-y-2.5 text-sm text-cream/75">
-            <li>
-              <Link
-                to="/outdoor-services/landscaping"
-                className="hover:text-gold"
-              >
-                Landscaping
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/outdoor-services/sod-installation"
-                className="hover:text-gold"
-              >
-                Sod Installation
-              </Link>
-            </li>
-            <li>
-              <Link to="/outdoor-services/decks" className="hover:text-gold">
-                Decks
-              </Link>
-            </li>
-            <li>
-              <Link to="/outdoor-services/fences" className="hover:text-gold">
-                Fences
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/outdoor-services/interlocking"
-                className="hover:text-gold"
-              >
-                Interlocking
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/outdoor-services/lawn-maintenance"
-                className="hover:text-gold"
-              >
-                Lawn Maintenance
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="eyebrow mb-4">Interior</h4>
-          <ul className="space-y-2.5 text-sm text-cream/75">
-            <li>
-              <Link
-                to="/interior-renovations/flooring"
-                className="hover:text-gold"
-              >
-                Flooring
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/interior-renovations/vinyl-laminate"
-                className="hover:text-gold"
-              >
-                Vinyl & Laminate
-              </Link>
-            </li>
-            <li>
-              <Link to="/interior-renovations/tile" className="hover:text-gold">
-                Tile
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/interior-renovations/bathrooms"
-                className="hover:text-gold"
-              >
-                Bathrooms
-              </Link>
-            </li>
-            <li>
-              <Link to="/sod-ordering" className="hover:text-gold">
-                Order Sod →
-              </Link>
-            </li>
-            <li>
-              <Link to="/portfolio" className="hover:text-gold">
-                Portfolio
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="eyebrow mb-4">Contact</h4>
-          <ul className="space-y-3 text-sm text-cream/75">
-            <li className="flex items-start gap-3">
-              <Phone className="w-4 h-4 text-gold mt-0.5" />
-              <a href="tel:+12265004608" className="hover:text-gold">
-                (226) 500-4608
-              </a>
-            </li>
-            <li className="flex items-start gap-3">
-              <Mail className="w-4 h-4 text-gold mt-0.5" />
-              <a
-                href="mailto:silverscapesolutions@gmail.com"
-                className="hover:text-gold break-all"
-              >
-                silverscapesolutions@gmail.com
-              </a>
-            </li>
-            <li className="flex items-start gap-3">
-              <MapPin className="w-4 h-4 text-gold mt-0.5" />
-              Guelph · Kitchener · Waterloo · GTA
-            </li>
-          </ul>
-          <CTA to="/contact" variant="outline" size="sm" className="mt-6">
-            Request a Quote
-          </CTA>
+          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4">
+            <FooterColumn title="Outdoor">
+              {OUTDOOR.slice(0, 7).map((s) => (
+                <li key={s.slug}>
+                  <Link to={servicePath(s)} className={linkCls}>
+                    {s.title}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link to="/outdoor-services" className={linkCls}>
+                  All outdoor services
+                </Link>
+              </li>
+            </FooterColumn>
+            <FooterColumn title="Interior">
+              {INTERIOR.map((s) => (
+                <li key={s.slug}>
+                  <Link to={servicePath(s)} className={linkCls}>
+                    {s.title}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link to="/interior-renovations" className={linkCls}>
+                  All interior services
+                </Link>
+              </li>
+            </FooterColumn>
+            <FooterColumn title="Service areas">
+              {[...PRIMARY_LOCATIONS, ...GTA_CITIES].map((l) => (
+                <li key={l.slug}>
+                  <Link
+                    to="/service-areas/$city"
+                    params={{ city: l.slug }}
+                    className={linkCls}
+                  >
+                    {l.name}
+                  </Link>
+                </li>
+              ))}
+            </FooterColumn>
+            <FooterColumn title="Company">
+              <li>
+                <Link to="/sod-ordering" className={linkCls}>
+                  Order sod
+                </Link>
+              </li>
+              <li>
+                <Link to="/portfolio" className={linkCls}>
+                  Portfolio
+                </Link>
+              </li>
+              <li>
+                <Link to="/resources" className={linkCls}>
+                  Resources
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className={linkCls}>
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className={linkCls}>
+                  Contact
+                </Link>
+              </li>
+            </FooterColumn>
+          </div>
         </div>
       </div>
       <div className="border-t border-cream/10">
-        <div className="section-shell py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream/50">
-          <span>
+        <div className="container-site flex flex-col gap-2 py-6 text-sm text-cream/70 sm:flex-row sm:items-center sm:justify-between">
+          <p>
             © {new Date().getFullYear()} SilverScape Solutions. All rights
             reserved.
-          </span>
-          <span>Southern Ontario Residential Projects</span>
+          </p>
+          <p>Guelph · Kitchener · Waterloo · Cambridge · GTA</p>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterColumn({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-gold font-sans">
+        {title}
+      </h2>
+      <ul className="mt-5 space-y-2.5 text-[0.9375rem]">{children}</ul>
+    </div>
   );
 }

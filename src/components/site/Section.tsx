@@ -1,39 +1,48 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
+import { typeset } from "@/lib/typeset";
+
+export type Tone = "ink" | "forest" | "cream" | "stone" | "paper";
+
+const TONE_CLASS: Record<Tone, string> = {
+  ink: "surface-ink",
+  forest: "surface-forest",
+  cream: "surface-cream on-light",
+  stone: "surface-stone on-light",
+  paper: "surface-paper on-light",
+};
+
+export const isLightTone = (tone: Tone) =>
+  tone === "cream" || tone === "stone" || tone === "paper";
 
 export function Section({
   children,
-  className = "",
-  variant = "dark",
+  tone = "ink",
   id,
-  contentClassName = "",
-  spacing = "default",
+  className,
+  size = "default",
+  labelledBy,
 }: {
   children: ReactNode;
-  className?: string;
-  variant?: "dark" | "light" | "deep";
+  tone?: Tone;
   id?: string;
-  contentClassName?: string;
-  spacing?: "default" | "compact";
+  className?: string;
+  size?: "default" | "sm";
+  labelledBy?: string;
 }) {
-  const bg =
-    variant === "light"
-      ? "bg-cream text-forest-deep"
-      : variant === "deep"
-        ? "bg-forest-deep text-cream"
-        : "bg-background text-foreground";
-  const space =
-    spacing === "compact" ? "section-space-compact" : "section-space";
   return (
-    <section id={id} className={`${bg} ${className}`}>
-      <div className={`section-shell ${space} ${contentClassName}`}>
-        {children}
-      </div>
+    <section
+      id={id}
+      aria-labelledby={labelledBy}
+      className={cn(
+        TONE_CLASS[tone],
+        size === "sm" ? "section-sm" : "section",
+        className,
+      )}
+    >
+      <div className="container-site">{children}</div>
     </section>
   );
-}
-
-export function Eyebrow({ children }: { children: ReactNode }) {
-  return <div className="eyebrow">{children}</div>;
 }
 
 export function SectionHeader({
@@ -41,30 +50,56 @@ export function SectionHeader({
   title,
   description,
   align = "left",
-  variant = "dark",
+  id,
+  as: Heading = "h2",
+  className,
+  action,
 }: {
   eyebrow?: string;
   title: ReactNode;
   description?: ReactNode;
   align?: "left" | "center";
-  variant?: "dark" | "light";
+  id?: string;
+  as?: "h1" | "h2";
+  className?: string;
+  action?: ReactNode;
 }) {
-  const sub = variant === "light" ? "text-forest/70" : "text-cream/70";
+  const centered = align === "center";
   return (
     <div
-      className={`max-w-3xl ${align === "center" ? "mx-auto text-center" : ""}`}
-    >
-      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-      <h2 className="mt-4 font-serif text-[2.65rem] leading-[1.04] md:text-5xl lg:text-[3.85rem]">
-        {title}
-      </h2>
-      {description && (
-        <p
-          className={`mt-6 max-w-2xl text-base leading-relaxed md:text-lg ${sub} ${align === "center" ? "mx-auto" : ""}`}
-        >
-          {description}
-        </p>
+      className={cn(
+        "flex flex-col gap-6 md:flex-row md:items-end md:justify-between",
+        centered && "md:flex-col md:items-center text-center",
+        className,
       )}
+    >
+      <div className={cn("max-w-3xl", centered && "mx-auto")}>
+        {eyebrow && (
+          <p className={cn("eyebrow", centered && "eyebrow-plain")}>
+            {eyebrow}
+          </p>
+        )}
+        <Heading
+          id={id}
+          className={cn(
+            Heading === "h1" ? "type-h1" : "type-h2",
+            eyebrow && "mt-4",
+          )}
+        >
+          {typeset(title)}
+        </Heading>
+        {description && (
+          <p
+            className={cn(
+              "type-lead mt-5 measure text-muted-dark [.on-light_&]:text-muted-light",
+              centered && "mx-auto",
+            )}
+          >
+            {description}
+          </p>
+        )}
+      </div>
+      {action && <div className="shrink-0 [&_a]:min-h-11">{action}</div>}
     </div>
   );
 }

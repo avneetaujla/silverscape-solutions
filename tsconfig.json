@@ -2,6 +2,10 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
+    "routeTree.gen.ts",
+    "router.tsx",
+    "start.ts",
+    "server.ts",
     "vite.config.ts",
     "eslint.config.js"
   ],
@@ -10,12 +14,13 @@
     "jsx": "react-jsx",
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["vite/client"],
+    "types": ["vite/client", "node"],
 
     /* Bundler mode */
     "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": false,
+    "resolveJsonModule": true,
     "noEmit": true,
 
     /* Linting */

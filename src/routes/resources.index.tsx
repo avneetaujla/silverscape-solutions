@@ -1,21 +1,34 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
-import { ARTICLES } from "@/lib/articles-data";
-import heroImg from "@/assets/proj-bathroom.jpg";
+import { createFileRoute } from "@tanstack/react-router";
 import { PageHero } from "@/components/site/PageHero";
-import { Section, SectionHeader } from "@/components/site/Section";
+import { Section } from "@/components/site/Section";
+import { ArticleCard } from "@/components/site/Cards";
+import { FinalCTA } from "@/components/site/FinalCTA";
+import { ARTICLES, type Article } from "@/lib/articles-data";
+import { breadcrumbSchema, seo } from "@/lib/seo";
+
+const PATH = "/resources";
+const CATEGORIES: Article["category"][] = [
+  "Outdoor Planning",
+  "Sod & Lawn",
+  "Interior Planning",
+  "Hiring & Process",
+];
 
 export const Route = createFileRoute("/resources/")({
-  head: () => ({
-    meta: [
-      { title: "Resources & Guides — SilverScape Solutions" },
-      {
-        name: "description",
-        content:
-          "Cost guides, planning articles and contractor advice for outdoor and interior renovations.",
-      },
-    ],
-  }),
+  head: () =>
+    seo({
+      title:
+        "Resources — Planning Guides for Landscaping, Sod & Renovations | SilverScape",
+      description:
+        "Practical planning guides for Ontario homeowners: landscaping costs, how much sod to order, deck vs patio, interlocking, vinyl vs laminate, bathroom renovations and hiring a contractor.",
+      path: PATH,
+      jsonLd: [
+        breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Resources", path: PATH },
+        ]),
+      ],
+    }),
   component: ResourcesPage,
 });
 
@@ -23,50 +36,66 @@ function ResourcesPage() {
   return (
     <>
       <PageHero
+        size="compact"
         eyebrow="Resources"
         title={
           <>
-            Plan smarter <em className="italic text-gold">before you build</em>.
+            Plan with <span className="accent-serif">better information.</span>
           </>
         }
-        description="Cost guides, comparisons and contractor advice — written for Southern Ontario homeowners."
-        image={heroImg}
-        height="short"
+        description="Straightforward guides on costs, materials, timelines and Ontario conditions — written to help you make good decisions before you hire anyone."
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Resources", path: PATH },
+        ]}
       />
-      <Section variant="dark">
-        <SectionHeader eyebrow="Articles" title="Latest guides." />
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {ARTICLES.map((a) => (
-            <Link
-              key={a.slug}
-              to="/resources/$slug"
-              params={{ slug: a.slug }}
-              className="group premium-card premium-card-interactive block"
+      <Section tone="paper" labelledBy="guides-heading">
+        <h2 id="guides-heading" className="sr-only">
+          All guides
+        </h2>
+        <nav
+          aria-label="Guide categories"
+          className="flex flex-wrap gap-x-6 gap-y-2 border-b border-forest-deep/10 pb-6"
+        >
+          {CATEGORIES.map((c) => (
+            <a
+              key={c}
+              href={`#${slugify(c)}`}
+              className="link-inline min-h-11 inline-flex items-center text-[0.9375rem]"
             >
-              <div className="aspect-[16/10] overflow-hidden">
-                <img
-                  src={a.image}
-                  alt={a.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  loading="lazy"
-                />
-              </div>
-              <div className="p-7">
-                <div className="premium-kicker text-gold">
-                  {a.category} · {a.readTime}
-                </div>
-                <h3 className="mt-3 font-serif text-xl text-cream group-hover:text-gold transition-colors">
-                  {a.title}
-                </h3>
-                <p className="mt-2 text-sm text-cream/65">{a.excerpt}</p>
-                <div className="premium-link mt-5">
-                  Read article <ArrowRight className="h-4 w-4" />
-                </div>
-              </div>
-            </Link>
+              {c}
+            </a>
           ))}
-        </div>
+        </nav>
+        {CATEGORIES.map((c) => {
+          const items = ARTICLES.filter((a) => a.category === c);
+          if (!items.length) return null;
+          return (
+            <section
+              key={c}
+              aria-labelledby={slugify(c)}
+              className="mt-14 first-of-type:mt-12"
+            >
+              <h3 id={slugify(c)} className="type-h3">
+                {c}
+              </h3>
+              <div className="mt-7 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {items.map((a) => (
+                  <ArticleCard key={a.slug} article={a} />
+                ))}
+              </div>
+            </section>
+          );
+        })}
       </Section>
+      <FinalCTA />
     </>
   );
+}
+
+function slugify(s: string) {
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 }

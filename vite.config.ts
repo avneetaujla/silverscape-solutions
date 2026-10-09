@@ -7,6 +7,12 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import netlify from "@netlify/vite-plugin-tanstack-start";
 
+// Canonical/OG URLs need an absolute origin. Netlify exposes the production URL as `URL`
+// at build time; an explicit VITE_SITE_URL always wins.
+if (!process.env.VITE_SITE_URL && process.env.URL) {
+  process.env.VITE_SITE_URL = process.env.URL;
+}
+
 // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
 // @cloudflare/vite-plugin builds from this — wrangler.jsonc main alone is insufficient.
 export default defineConfig({

@@ -1,51 +1,93 @@
 import type { ReactNode } from "react";
+import type { SiteImage } from "@/content/mediaCatalog";
+import { Img } from "@/components/site/Img";
+import { Breadcrumbs, type Crumb } from "@/components/site/Breadcrumbs";
+import { cn } from "@/lib/utils";
+import { typeset } from "@/lib/typeset";
 
+/**
+ * Page header. With an `image` it renders a full-bleed photographic hero;
+ * without one it renders a typographic hero on the contour surface, used for
+ * pages that should not consume project photography.
+ */
 export function PageHero({
   eyebrow,
   title,
   description,
   image,
   children,
-  height = "tall",
+  breadcrumbs,
+  size = "default",
+  aside,
 }: {
   eyebrow?: string;
   title: ReactNode;
   description?: ReactNode;
-  image: string;
+  image?: SiteImage;
   children?: ReactNode;
-  height?: "tall" | "short";
+  breadcrumbs?: Crumb[];
+  size?: "default" | "compact";
+  aside?: ReactNode;
 }) {
   return (
     <section
-      className={`relative ${height === "tall" ? "min-h-[78vh]" : "min-h-[55vh]"} flex items-end overflow-hidden`}
+      className={cn(
+        "relative isolate flex items-end overflow-hidden",
+        image ? "surface-ink" : "surface-contour",
+        image
+          ? size === "compact"
+            ? "min-h-[min(34rem,72svh)]"
+            : "min-h-[min(44rem,86svh)]"
+          : "min-h-[min(30rem,64svh)]",
+      )}
     >
-      <img
-        src={image}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover"
-        width={1920}
-        height={1080}
-      />
-      <div className="absolute inset-0 hero-overlay" />
-      <div className="absolute inset-0 bg-forest-deep/40" />
-      <div className="relative section-shell pt-40 pb-20 md:pb-28">
-        <div className="max-w-3xl">
-          {eyebrow && <div className="eyebrow mb-6">{eyebrow}</div>}
-          <h1 className="font-serif text-5xl leading-[1.01] text-cream md:text-6xl lg:text-7xl">
-            {title}
-          </h1>
-          {description && (
-            <p className="mt-7 max-w-2xl text-lg leading-relaxed text-cream/80 md:text-xl">
-              {description}
-            </p>
+      {image && (
+        <>
+          <Img
+            image={image}
+            sizes="100vw"
+            priority
+            decorative
+            className="absolute inset-0 -z-10 h-full w-full object-cover"
+          />
+          <div aria-hidden className="hero-scrim absolute inset-0 -z-10" />
+        </>
+      )}
+      <div className="container-site w-full pb-14 pt-[calc(var(--header-h)+3.5rem)] md:pb-20">
+        <div
+          className={cn(
+            "grid gap-10",
+            aside && "lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end",
           )}
-          {children && (
-            <div className="mt-10 flex flex-wrap gap-3 md:gap-4">
-              {children}
-            </div>
-          )}
+        >
+          <div className="max-w-3xl">
+            {breadcrumbs && (
+              <div className="mb-7">
+                <Breadcrumbs items={breadcrumbs} />
+              </div>
+            )}
+            {eyebrow && <p className="eyebrow">{eyebrow}</p>}
+            <h1 className={cn("type-h1 text-cream", eyebrow && "mt-4")}>
+              {typeset(title)}
+            </h1>
+            {description && (
+              <p className="type-lead mt-6 measure text-cream/85">
+                {description}
+              </p>
+            )}
+            {children && (
+              <div className="mt-9 flex flex-wrap gap-3">{children}</div>
+            )}
+          </div>
+          {aside}
         </div>
       </div>
+      {!image && (
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold/35 to-transparent"
+        />
+      )}
     </section>
   );
 }

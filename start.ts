@@ -1,4 +1,8 @@
-import { createStart, createMiddleware } from "@tanstack/react-start";
+import {
+  createCsrfMiddleware,
+  createMiddleware,
+  createStart,
+} from "@tanstack/react-start";
 
 import { renderErrorPage } from "./src/lib/error-page";
 
@@ -17,6 +21,12 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
   }
 });
 
+// Server functions (lead form, sod quote/checkout) only accept same-origin
+// browser requests. Server routes such as sitemap.xml are not affected.
+const csrfMiddleware = createCsrfMiddleware({
+  filter: (ctx) => ctx.handlerType === "serverFn",
+});
+
 export const startInstance = createStart(() => ({
-  requestMiddleware: [errorMiddleware],
+  requestMiddleware: [errorMiddleware, csrfMiddleware],
 }));

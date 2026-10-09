@@ -1,124 +1,167 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { ARTICLES, type Article } from "@/lib/articles-data";
+import {
+  createFileRoute,
+  Link,
+  notFound,
+  redirect,
+} from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Section } from "@/components/site/Section";
 import { CTA } from "@/components/site/CTA";
+import { ArticleCard } from "@/components/site/Cards";
+import { FinalCTA } from "@/components/site/FinalCTA";
+import type { Article } from "@/lib/articles-data";
+import { articleSchema, breadcrumbSchema, seo } from "@/lib/seo";
+import { typeset } from "@/lib/typeset";
+
+function crumbs(a: Article) {
+  return [
+    { name: "Home", path: "/" },
+    { name: "Resources", path: "/resources" },
+    { name: a.title, path: `/resources/${a.slug}` },
+  ];
+}
+
+const dateFmt = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  timeZone: "UTC",
+});
 
 export const Route = createFileRoute("/resources/$slug")({
-  head: ({ params }) => {
-    const a = ARTICLES.find((x) => x.slug === params.slug);
-    return {
-      meta: [
-        { title: `${a?.title ?? "Article"} — SilverScape` },
-        { name: "description", content: a?.excerpt ?? "" },
-      ],
-    };
+  loader: async ({ params }) => {
+    const { ARTICLE_REDIRECTS, ARTICLES, findArticle } =
+      await import("@/lib/articles-data");
+    const target = ARTICLE_REDIRECTS[params.slug];
+    if (target)
+      throw redirect({
+        to: "/resources/$slug",
+        params: { slug: target },
+        statusCode: 301,
+      });
+    const article = findArticle(params.slug);
+    if (!article) throw notFound();
+    const sameCategory = ARTICLES.filter(
+      (x) => x.slug !== article.slug && x.category === article.category,
+    ).slice(0, 3);
+    const more =
+      sameCategory.length >= 2
+        ? sameCategory
+        : ARTICLES.filter((x) => x.slug !== article.slug).slice(0, 3);
+    return { article, more };
   },
-  loader: ({ params }) => {
-    const a = ARTICLES.find((x) => x.slug === params.slug);
-    if (!a) throw notFound();
-    return { article: a };
+  head: ({ loaderData }) => {
+    const a = loaderData?.article;
+    if (!a) return {};
+    const path = `/resources/${a.slug}`;
+    return seo({
+      title: `${a.title} | SilverScape Resources`,
+      description: a.metaDescription,
+      path,
+      type: "article",
+      jsonLd: [
+        articleSchema({
+          title: a.title,
+          description: a.metaDescription,
+          path,
+          datePublished: a.published,
+          dateModified: a.updated,
+        }),
+        breadcrumbSchema(crumbs(a)),
+      ],
+    });
   },
   component: ArticlePage,
-  errorComponent: ({ error }) => (
-    <div className="p-20 text-center text-cream">{error.message}</div>
-  ),
-  notFoundComponent: () => (
-    <div className="p-20 text-center text-cream">Article not found</div>
-  ),
 });
 
 function ArticlePage() {
-  const { article } = Route.useLoaderData() as { article: Article };
-  const related = ARTICLES.filter((a) => a.slug !== article.slug).slice(0, 3);
+  const { article: a, more } = Route.useLoaderData();
 
   return (
     <>
-      <section className="relative min-h-[60vh] flex items-end overflow-hidden">
-        <img
-          src={article.image}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 hero-overlay" />
-        <div className="absolute inset-0 bg-forest-deep/50" />
-        <div className="relative section-shell max-w-[1000px] pt-40 pb-16">
-          <Link to="/resources" className="premium-link">
-            <ArrowLeft className="h-4 w-4" /> All Resources
-          </Link>
-          <div className="eyebrow mt-6">
-            {article.category} · {article.readTime}
-          </div>
-          <h1 className="mt-3 font-serif text-4xl md:text-5xl lg:text-6xl text-cream leading-[1.05]">
-            {article.title}
-          </h1>
-          <p className="mt-6 text-lg text-cream/80 max-w-2xl">
-            {article.excerpt}
-          </p>
-        </div>
-      </section>
-
-      <Section variant="dark">
-        <article className="max-w-3xl mx-auto">
-          {article.body.map((b, i) =>
-            b.h ? (
-              <h2
-                key={i}
-                className="font-serif text-3xl text-cream mt-12 first:mt-0"
-              >
-                {b.h}
-              </h2>
-            ) : (
-              <p key={i} className="mt-5 text-cream/80 text-lg leading-relaxed">
-                {b.p}
-              </p>
-            ),
-          )}
-
-          <div className="mt-16 glass-card p-8 md:p-9 text-center">
-            <div className="eyebrow">Need a quote?</div>
-            <h3 className="mt-2 font-serif text-3xl text-cream">
-              Let's plan your project together.
-            </h3>
-            <p className="mt-3 text-cream/70 max-w-md mx-auto">
-              Written quotes within one business day.
+      <header className="surface-contour pb-14 pt-[calc(var(--header-h)+3rem)] md:pb-16">
+        <div className="container-site">
+          <div className="mx-auto max-w-3xl">
+            <Breadcrumbs items={crumbs(a)} />
+            <p className="eyebrow mt-8">
+              {a.category} · {a.readMinutes} min read
             </p>
-            <div className="mt-6 flex justify-center gap-3 flex-wrap">
-              <CTA to="/contact">Request a Quote</CTA>
-              <CTA to="/sod-ordering" variant="outline">
-                Order Sod
-              </CTA>
-            </div>
+            <h1 className="type-h1 mt-4 text-cream lg:-mr-28">
+              {typeset(a.title)}
+            </h1>
+            <p className="type-lead mt-5 text-cream/85">{a.excerpt}</p>
+            <p className="mt-6 text-sm text-cream/70">
+              Updated{" "}
+              <time dateTime={a.updated}>
+                {dateFmt.format(new Date(a.updated))}
+              </time>{" "}
+              · SilverScape Solutions
+            </p>
           </div>
-        </article>
+        </div>
+      </header>
+
+      <Section tone="paper" size="sm">
+        <div className="mx-auto max-w-3xl">
+          <article className="prose-article">
+            {a.body.map((b, i) => {
+              if (b.type === "h2") return <h2 key={i}>{b.text}</h2>;
+              if (b.type === "list")
+                return (
+                  <ul key={i}>
+                    {b.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                );
+              return <p key={i}>{b.text}</p>;
+            })}
+          </article>
+
+          {a.services.length > 0 && (
+            <aside
+              aria-labelledby="related-services"
+              className="card-stone mt-14 p-7 md:p-8"
+            >
+              <h2 id="related-services" className="type-h4">
+                Related services
+              </h2>
+              <ul className="mt-4 grid gap-1 sm:grid-cols-2">
+                {a.services.map((s) => (
+                  <li key={s.to}>
+                    <Link to={s.to as never} className="link-arrow min-h-11">
+                      {s.label} <ArrowRight aria-hidden className="h-4 w-4" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <CTA
+                to="/contact"
+                variant="forest"
+                className="mt-6"
+                track="request_quote_click"
+                trackLabel={`article_${a.slug}`}
+              >
+                Request a Quote
+              </CTA>
+            </aside>
+          )}
+        </div>
       </Section>
 
-      <Section variant="deep">
-        <div className="text-center">
-          <div className="eyebrow">Continue Reading</div>
-          <h3 className="mt-3 font-serif text-3xl md:text-4xl text-cream">
-            Related articles
-          </h3>
-        </div>
+      <Section tone="cream" labelledBy="more-guides">
+        <h2 id="more-guides" className="type-h2">
+          Keep reading
+        </h2>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {related.map((a) => (
-            <Link
-              key={a.slug}
-              to="/resources/$slug"
-              params={{ slug: a.slug }}
-              className="group glass-card premium-card-interactive p-6"
-            >
-              <div className="premium-kicker text-gold">{a.category}</div>
-              <div className="mt-2 font-serif text-xl text-cream group-hover:text-gold">
-                {a.title}
-              </div>
-              <div className="mt-5 inline-flex items-center gap-1 text-xs tracking-[0.22em] uppercase text-cream/55">
-                Read <ArrowRight className="h-4 w-4" />
-              </div>
-            </Link>
+          {more.map((x) => (
+            <ArticleCard key={x.slug} article={x} />
           ))}
         </div>
       </Section>
+
+      <FinalCTA />
     </>
   );
 }

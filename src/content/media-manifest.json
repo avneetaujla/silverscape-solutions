@@ -1,0 +1,162 @@
+{
+  "backyard-deck-patio": {
+    "width": 1280,
+    "height": 720,
+    "widths": [640, 1024, 1280]
+  },
+  "backyard-firepit-pergola": {
+    "width": 1280,
+    "height": 720,
+    "widths": [640, 1024, 1280]
+  },
+  "bathroom-floating-vanity": {
+    "width": 1280,
+    "height": 960,
+    "widths": [640, 1024, 1280]
+  },
+  "bathroom-glass-shower": {
+    "width": 1024,
+    "height": 683,
+    "widths": [640, 1024]
+  },
+  "brick-patio-dining": {
+    "width": 1024,
+    "height": 683,
+    "widths": [640, 1024]
+  },
+  "cedar-deck-steps": {
+    "width": 1152,
+    "height": 864,
+    "widths": [640, 1024, 1152]
+  },
+  "cedar-fence-gate": {
+    "width": 1152,
+    "height": 864,
+    "widths": [640, 1024, 1152]
+  },
+  "covered-porch": {
+    "width": 960,
+    "height": 640,
+    "widths": [640, 960]
+  },
+  "curbless-shower-tub": {
+    "width": 1280,
+    "height": 720,
+    "widths": [640, 1024, 1280]
+  },
+  "front-yard-garden-beds": {
+    "width": 1280,
+    "height": 960,
+    "widths": [640, 1024, 1280]
+  },
+  "front-yard-walkway": {
+    "width": 1280,
+    "height": 720,
+    "widths": [640, 1024, 1280]
+  },
+  "hardwood-empty-room": {
+    "width": 1024,
+    "height": 770,
+    "widths": [640, 1024]
+  },
+  "herringbone-driveway": {
+    "width": 1280,
+    "height": 720,
+    "widths": [640, 1024, 1280]
+  },
+  "horizontal-privacy-fence": {
+    "width": 1280,
+    "height": 960,
+    "widths": [640, 1024, 1280]
+  },
+  "living-room-oak-floor": {
+    "width": 1024,
+    "height": 683,
+    "widths": [640, 1024]
+  },
+  "main-floor-oak": {
+    "width": 1280,
+    "height": 720,
+    "widths": [640, 1024, 1280]
+  },
+  "marble-tile-shower": {
+    "width": 1280,
+    "height": 960,
+    "widths": [640, 1024, 1280]
+  },
+  "patio-dining-lounge": {
+    "width": 960,
+    "height": 636,
+    "widths": [640, 960]
+  },
+  "raised-composite-deck": {
+    "width": 1280,
+    "height": 720,
+    "widths": [640, 1024, 1280]
+  },
+  "sage-tile-shower": {
+    "width": 1152,
+    "height": 864,
+    "widths": [640, 1024, 1152]
+  },
+  "side-yard-walkway": {
+    "width": 960,
+    "height": 636,
+    "widths": [640, 960]
+  },
+  "slab-patio-seating": {
+    "width": 960,
+    "height": 640,
+    "widths": [640, 960]
+  },
+  "sod-farm-field": {
+    "width": 1280,
+    "height": 720,
+    "widths": [640, 1024, 1280]
+  },
+  "sod-laying": {
+    "width": 1280,
+    "height": 720,
+    "widths": [640, 1024, 1280]
+  },
+  "sod-new-lawn": {
+    "width": 1152,
+    "height": 864,
+    "widths": [640, 1024, 1152]
+  },
+  "sod-pallets-driveway": {
+    "width": 1152,
+    "height": 864,
+    "widths": [640, 1024, 1152]
+  },
+  "sod-roll-closeup": {
+    "width": 1152,
+    "height": 864,
+    "widths": [640, 1024, 1152]
+  },
+  "spa-bathroom-tub": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [640, 1024, 1600]
+  },
+  "striped-lawn": {
+    "width": 1024,
+    "height": 683,
+    "widths": [640, 1024]
+  },
+  "vinyl-plank-install": {
+    "width": 1280,
+    "height": 720,
+    "widths": [640, 1024, 1280]
+  },
+  "white-oak-vanity": {
+    "width": 1280,
+    "height": 720,
+    "widths": [640, 1024, 1280]
+  },
+  "yard-regrading-swale": {
+    "width": 1280,
+    "height": 720,
+    "widths": [640, 1024, 1280]
+  }
+}

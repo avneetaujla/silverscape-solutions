@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
-  Link,
   createRootRouteWithContext,
   useRouter,
   HeadContent,
@@ -11,27 +10,41 @@ import {
 import appCss from "../../styles.css?url";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { CTA } from "@/components/site/CTA";
+import { AnalyticsScripts, useAnalytics } from "@/components/site/Analytics";
 import { buttonVariants } from "@/components/ui/button";
-import { Toaster } from "@/components/ui/sonner";
-import { cn } from "@/lib/utils";
+import { localBusinessSchema } from "@/lib/seo";
+import { BUSINESS } from "@/lib/site";
+
+const FONTS_URL =
+  "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-forest-deep px-4">
-      <div className="max-w-md text-center">
-        <h1 className="font-serif text-8xl text-gold">404</h1>
-        <h2 className="mt-4 font-serif text-2xl text-cream">Page not found</h2>
-        <p className="mt-3 text-sm text-cream/60">
-          The page you're looking for has moved or doesn't exist.
+    <section className="surface-ink flex min-h-[80svh] items-center pt-[var(--header-h)]">
+      <div className="container-site py-20 text-center">
+        <p className="eyebrow eyebrow-plain">Page not found</p>
+        <h1 className="type-h1 mx-auto mt-4 max-w-2xl">
+          We couldn't find that page.
+        </h1>
+        <p className="type-lead mx-auto mt-5 measure text-cream/80">
+          It may have moved. Try one of these instead, or call us at{" "}
+          {BUSINESS.phoneDisplay}.
         </p>
-        <Link
-          to="/"
-          className={cn(buttonVariants({ variant: "outline" }), "mt-8")}
-        >
-          Return Home
-        </Link>
+        <div className="mt-9 flex flex-wrap justify-center gap-3">
+          <CTA to="/">Back to home</CTA>
+          <CTA to="/outdoor-services" variant="outline">
+            Outdoor services
+          </CTA>
+          <CTA to="/interior-renovations" variant="outline">
+            Interior renovations
+          </CTA>
+          <CTA to="/sod-ordering" variant="outline">
+            Order sod
+          </CTA>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -39,13 +52,14 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   return (
-    <div className="flex min-h-screen items-center justify-center bg-forest-deep px-4">
-      <div className="max-w-md text-center">
-        <h1 className="font-serif text-3xl text-cream">Something went wrong</h1>
-        <p className="mt-3 text-sm text-cream/60">
-          Please try again or return home.
+    <section className="surface-ink flex min-h-[80svh] items-center pt-[var(--header-h)]">
+      <div className="container-site py-20 text-center">
+        <h1 className="type-h2">Something went wrong.</h1>
+        <p className="mx-auto mt-4 measure text-cream/80">
+          Please try again. If the problem continues, call us at{" "}
+          {BUSINESS.phoneDisplay}.
         </p>
-        <div className="mt-8 flex gap-3 justify-center">
+        <div className="mt-8 flex justify-center gap-3">
           <button
             onClick={() => {
               router.invalidate();
@@ -53,14 +67,14 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className={buttonVariants({ variant: "default" })}
           >
-            Retry
+            Try again
           </button>
           <a href="/" className={buttonVariants({ variant: "outline" })}>
             Home
           </a>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -69,27 +83,52 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     head: () => ({
       meta: [
         { charSet: "utf-8" },
-        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        {
+          name: "viewport",
+          content: "width=device-width, initial-scale=1, viewport-fit=cover",
+        },
+        { name: "theme-color", content: "#0f1a14" },
         {
           title:
-            "SilverScape Solutions — Premium Outdoor & Interior Renovations | Southern Ontario",
+            "SilverScape Solutions — Property Transformations in Southern Ontario",
         },
         {
           name: "description",
           content:
-            "Luxury landscaping, decks, fences, interlocking, sod and interior renovations across Guelph, Kitchener, Waterloo and the GTA.",
+            "Outdoor transformations, interior renovations and Kentucky Bluegrass sod delivery for homes in Guelph, Kitchener, Waterloo, Cambridge and the GTA.",
         },
-        { name: "author", content: "SilverScape Solutions" },
-        { property: "og:title", content: "SilverScape Solutions" },
-        {
-          property: "og:description",
-          content:
-            "Premium outdoor and interior upgrades that make your property feel finished.",
-        },
-        { property: "og:type", content: "website" },
-        { name: "twitter:card", content: "summary_large_image" },
+        { name: "format-detection", content: "telephone=no" },
       ],
-      links: [{ rel: "stylesheet", href: appCss }],
+      links: [
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        {
+          rel: "preconnect",
+          href: "https://fonts.gstatic.com",
+          crossOrigin: "anonymous",
+        },
+        { rel: "stylesheet", href: FONTS_URL },
+        { rel: "stylesheet", href: appCss },
+        {
+          rel: "icon",
+          type: "image/png",
+          sizes: "32x32",
+          href: "/favicon-32.png",
+        },
+        {
+          rel: "apple-touch-icon",
+          sizes: "180x180",
+          href: "/apple-touch-icon.png",
+        },
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(localBusinessSchema()).replace(
+            /</g,
+            "\\u003c",
+          ),
+        },
+      ],
     }),
     shellComponent: RootShell,
     component: RootComponent,
@@ -100,9 +139,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en-CA">
       <head>
         <HeadContent />
+        <AnalyticsScripts />
       </head>
       <body>
         {children}
@@ -114,15 +154,15 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useAnalytics();
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen flex flex-col bg-background">
+      <div className="flex min-h-screen flex-col bg-ink">
         <Header />
-        <main className="flex-1">
+        <main id="main" tabIndex={-1} className="flex-1 outline-none">
           <Outlet />
         </main>
         <Footer />
-        <Toaster theme="dark" position="top-center" />
       </div>
     </QueryClientProvider>
   );
