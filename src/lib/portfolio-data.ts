@@ -95,7 +95,7 @@ export const PORTFOLIO: PortfolioProject[] = [
     location: null,
     images: ["cedar-fence-gate"],
     scope: [
-      "Posts set below frost depth",
+      "Posts set for the site conditions",
       "Board-on-board cedar panels",
       "Arched walk-through gate",
     ],

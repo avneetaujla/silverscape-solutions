@@ -36,7 +36,7 @@ export const LOCATIONS: Location[] = [
       },
       {
         t: "Permits",
-        d: "Raised decks and some structures need a City of Guelph building permit. We confirm requirements before any build.",
+        d: "Raised decks and some structures in Guelph often need a building permit. Requirements vary by project and should be confirmed before work begins.",
       },
     ],
     featuredOutdoor: [
@@ -47,7 +47,7 @@ export const LOCATIONS: Location[] = [
     ],
     featuredInterior: ["bathrooms", "flooring"],
     sodNote:
-      "Guelph addresses are closest to our base, so the delivery portion of a sod order is typically at its lowest here.",
+      "Guelph is our home base. Your exact delivery cost comes from the real driving route — shown before you pay.",
     nearby: ["kitchener", "waterloo", "cambridge"],
   },
   {
@@ -58,7 +58,7 @@ export const LOCATIONS: Location[] = [
     metaDescription:
       "Yard transformations, decks, interlocking, flooring and bathroom renovations for Kitchener homes, plus Kentucky Bluegrass sod delivery.",
     intro:
-      "Kitchener is a short drive down Highway 7 from our Guelph base and close to the sod farm on our delivery route — a core part of where we work.",
+      "Kitchener is a short drive down Highway 7 from our Guelph base — a core part of where we work.",
     localNotes: [
       {
         t: "New-build lots",
@@ -70,7 +70,7 @@ export const LOCATIONS: Location[] = [
       },
       {
         t: "Locates first",
-        d: "Every dig starts with a free Ontario One Call utility locate — we arrange it before work begins.",
+        d: "Digging should start with an Ontario One Call utility locate. Where a locate is required, that should be addressed before the relevant work begins.",
       },
     ],
     featuredOutdoor: [
@@ -81,7 +81,7 @@ export const LOCATIONS: Location[] = [
     ],
     featuredInterior: ["bathrooms", "vinyl-laminate"],
     sodNote:
-      "Kitchener sits close to the sod farm on our route, which keeps delivery distance — and cost — relatively low.",
+      "Kitchener delivery is priced on the real driving route, which is shown before you pay.",
     nearby: ["waterloo", "cambridge", "guelph"],
   },
   {
@@ -115,7 +115,7 @@ export const LOCATIONS: Location[] = [
     ],
     featuredInterior: ["flooring", "bathrooms"],
     sodNote:
-      "Waterloo deliveries are a short run from the sod farm. Your exact delivery cost comes from the real driving route at checkout.",
+      "Waterloo delivery is priced on the real driving route, which is shown at checkout.",
     nearby: ["kitchener", "guelph", "cambridge"],
   },
   {
@@ -138,7 +138,7 @@ export const LOCATIONS: Location[] = [
       },
       {
         t: "Fences and privacy",
-        d: "Fence heights and pool enclosures follow municipal bylaws. We confirm the rules before quoting.",
+        d: "Fence heights and pool enclosures follow municipal bylaws, which should be confirmed before work begins.",
       },
     ],
     featuredOutdoor: [
@@ -149,7 +149,7 @@ export const LOCATIONS: Location[] = [
     ],
     featuredInterior: ["bathrooms", "tile"],
     sodNote:
-      "Cambridge is close to the sod farm on our delivery route, so delivery distances are typically short.",
+      "Cambridge delivery is priced on the real driving route, which is shown before you pay.",
     nearby: ["kitchener", "guelph", "waterloo"],
   },
   {
@@ -169,7 +169,7 @@ export const LOCATIONS: Location[] = [
       },
       {
         t: "Tree protection",
-        d: "Toronto and Mississauga regulate work around protected trees. We check before excavating near mature trees.",
+        d: "Toronto and Mississauga regulate work around protected trees. Requirements should be confirmed before excavating near mature trees.",
       },
       {
         t: "Project fit",
@@ -184,7 +184,7 @@ export const LOCATIONS: Location[] = [
     ],
     featuredInterior: ["bathrooms", "flooring"],
     sodNote:
-      "Sod delivery to the GTA is available. Because pricing uses the full driving route, delivery costs more than in Guelph or Kitchener-Waterloo.",
+      "Sod delivery to the GTA is available and priced on the full driving route.",
     nearby: ["toronto", "mississauga", "brampton"],
   },
   {
@@ -199,7 +199,7 @@ export const LOCATIONS: Location[] = [
     localNotes: [
       {
         t: "Private tree bylaw",
-        d: "Toronto protects trees 30 cm or more in diameter on private property. Excavation near them can require a permit, so we check before digging.",
+        d: "Toronto regulates work around larger private trees. Excavation near them can require approval, so those requirements should be confirmed before digging.",
       },
       {
         t: "Access and parking",
@@ -218,7 +218,7 @@ export const LOCATIONS: Location[] = [
     ],
     featuredInterior: ["bathrooms", "showers-tubs"],
     sodNote:
-      "Sod delivery to Toronto is priced on the full driving route from Guelph, so it is best suited to larger orders.",
+      "Sod delivery to Toronto is priced on the full driving route from Guelph. Availability and cost depend on the route.",
     nearby: ["mississauga", "brampton", "gta"],
   },
   {
@@ -233,11 +233,11 @@ export const LOCATIONS: Location[] = [
     localNotes: [
       {
         t: "Driveway rules",
-        d: "Driveway widening and curb cuts are regulated by the City. We confirm what is allowed before designing an interlocking driveway.",
+        d: "Driveway widening and curb cuts are regulated by the City. What is allowed should be confirmed before an interlocking driveway is designed.",
       },
       {
         t: "Tree protection",
-        d: "Mississauga regulates removal of larger private trees. We check requirements before work near mature trees.",
+        d: "Mississauga regulates removal of larger private trees. Requirements should be confirmed before work near mature trees.",
       },
       {
         t: "Backyard upgrades",
@@ -271,7 +271,7 @@ export const LOCATIONS: Location[] = [
       },
       {
         t: "Privacy",
-        d: "Close neighbours make privacy fencing and screens a frequent priority. We confirm height bylaws first.",
+        d: "Close neighbours make privacy fencing and screens a frequent priority. Height rules should be confirmed before work begins.",
       },
       {
         t: "Basements and flooring",

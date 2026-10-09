@@ -30,7 +30,7 @@ export const Route = createFileRoute("/contact")({
     seo({
       title: "Contact & Request a Quote | SilverScape Solutions",
       description:
-        "Request a quote for an outdoor transformation or interior renovation in Guelph, Kitchener-Waterloo, Cambridge or the GTA. Call (226) 500-4608 or send project details.",
+        "Request a quote for an outdoor transformation or interior renovation in Guelph, Kitchener-Waterloo, Cambridge or the GTA. Call 226-500-4608 or send project details.",
       path: PATH,
       jsonLd: [
         breadcrumbSchema([

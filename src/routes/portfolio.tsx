@@ -84,7 +84,7 @@ function PortfolioPage() {
   }
   function openProject(p: PortfolioProject) {
     setOpen(p);
-    trackEvent("portfolio_project_view", {
+    trackEvent("portfolio_viewed", {
       project: p.slug,
       division: p.division,
     });

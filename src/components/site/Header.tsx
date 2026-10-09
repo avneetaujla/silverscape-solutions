@@ -34,7 +34,7 @@ export function Header() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow] duration-300",
+        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow] duration-300 print:hidden",
         scrolled || open
           ? "border-b border-cream/10 bg-ink/95 shadow-[0_10px_30px_-20px_oklch(0_0_0/0.8)] backdrop-blur-md"
           : "border-b border-transparent bg-gradient-to-b from-ink/70 to-transparent",

@@ -16,7 +16,7 @@ export const Route = createFileRoute("/about")({
       title:
         "About SilverScape Solutions — Guelph-Based Outdoor & Interior Contractor",
       description:
-        "SilverScape Solutions is a Guelph-based team delivering outdoor transformations, interior renovations and Kentucky Bluegrass sod delivery across Southern Ontario.",
+        "SilverScape Solutions is a Guelph-based team delivering outdoor transformations, interior renovations and Kentucky Bluegrass sod delivery in Guelph, Kitchener-Waterloo, Cambridge and the GTA.",
       path: PATH,
       jsonLd: [
         breadcrumbSchema([
@@ -145,7 +145,7 @@ function AboutPage() {
             {
               icon: Sprout,
               t: "Sod Ordering & Delivery",
-              d: "Fresh Kentucky Bluegrass sod, ordered online with an itemized total and delivered on a real driving route.",
+              d: "Kentucky Bluegrass sod, ordered online with an itemized total and delivered on a real driving route.",
               to: "/sod-ordering" as const,
             },
           ].map((d) => (

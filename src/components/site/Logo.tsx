@@ -13,7 +13,6 @@ export function Logo({
     <Link
       to="/"
       onClick={onClick}
-      aria-label="SilverScape Solutions — home"
       className={cn("flex items-center gap-3", className)}
     >
       <span className="grid h-10 w-10 place-items-center rounded-[var(--radius-lg)] bg-cream">
@@ -22,11 +21,12 @@ export function Logo({
       <span className="flex flex-col leading-none">
         <span className="font-serif text-[1.45rem] font-medium tracking-tight text-cream">
           SilverScape
-        </span>
+        </span>{" "}
         <span className="mt-1 text-[0.625rem] font-semibold uppercase tracking-[0.32em] text-gold">
           Solutions
         </span>
       </span>
+      <span className="sr-only"> — home</span>
     </Link>
   );
 }

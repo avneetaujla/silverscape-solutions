@@ -20,8 +20,33 @@ import {
   retrieveCheckoutSession,
   stripeKey,
 } from "@/lib/sod/stripe.server";
+import { confirmationEmailConfigured } from "@/lib/sod/confirmation-email.server";
+import { CHECKOUT_ACKNOWLEDGEMENT, launchBlockers } from "@/lib/legal";
+import { isRateLimited } from "@/lib/rate-limit.server";
 
 const CALL_US = `Please call ${BUSINESS.phoneDisplay} and we'll price your order directly.`;
+
+const RATE_LIMITED = {
+  ok: false as const,
+  code: "invalid" as const,
+  message: `Too many attempts from this connection. Please wait a few minutes and try again, or call ${BUSINESS.phoneDisplay}.`,
+};
+
+/**
+ * Live (real-money) payments stay off while any launch blocker remains or no
+ * durable confirmation email can be sent. Test-mode keys are unaffected so the
+ * flow can still be exercised end to end.
+ */
+function liveCheckoutBlockers() {
+  const key = stripeKey();
+  if (!/^(sk|rk)_live_/.test(key)) return [];
+  const blockers = launchBlockers();
+  if (!confirmationEmailConfigured())
+    blockers.push(
+      "Order confirmation email not configured (STRIPE_WEBHOOK_SECRET, RESEND_API_KEY, LEAD_FROM_EMAIL)",
+    );
+  return blockers;
+}
 
 async function buildQuote(order: SodOrderInput): Promise<SodResult<SodQuote>> {
   if (!mapsKey()) {
@@ -93,16 +118,27 @@ async function buildQuote(order: SodOrderInput): Promise<SodResult<SodQuote>> {
 
 export const quoteSodOrder = createServerFn({ method: "POST" })
   .validator((input: unknown) => sodOrderSchema.parse(input))
-  .handler(async ({ data }) => buildQuote(data));
+  .handler(async ({ data }): Promise<SodResult<SodQuote>> => {
+    if (isRateLimited("sod_quote", 20, 10 * 60_000)) return RATE_LIMITED;
+    return buildQuote(data);
+  });
 
 const checkoutSchema = sodOrderSchema.extend({
   expectedTotalCents: z.number().int().positive(),
   attemptId: z.string().uuid(),
+  /** The unchecked-by-default acknowledgement on the review step. */
+  acceptedTerms: z.literal(true, {
+    errorMap: () => ({
+      message:
+        "Please confirm you've reviewed your order and agree to the terms.",
+    }),
+  }),
 });
 
 export const startSodCheckout = createServerFn({ method: "POST" })
   .validator((input: unknown) => checkoutSchema.parse(input))
   .handler(async ({ data }): Promise<SodResult<{ url: string }>> => {
+    if (isRateLimited("sod_checkout", 10, 10 * 60_000)) return RATE_LIMITED;
     if (!stripeKey()) {
       console.error("[sod] STRIPE_SECRET_KEY is not set");
       return {
@@ -111,8 +147,17 @@ export const startSodCheckout = createServerFn({ method: "POST" })
         message: `Online payment is temporarily unavailable. ${CALL_US}`,
       };
     }
+    const blockers = liveCheckoutBlockers();
+    if (blockers.length) {
+      console.error("[sod] Live checkout blocked:", blockers.join(" | "));
+      return {
+        ok: false,
+        code: "not_configured",
+        message: `Online payment isn't available yet. ${CALL_US}`,
+      };
+    }
 
-    const { expectedTotalCents, attemptId, ...order } = data;
+    const { expectedTotalCents, attemptId, acceptedTerms: _, ...order } = data;
     // Never trust the client total: recalculate from scratch and refuse on mismatch.
     const quote = await buildQuote(order);
     if (!quote.ok) return quote;
@@ -137,6 +182,10 @@ export const startSodCheckout = createServerFn({ method: "POST" })
         quote: quote.data,
         origin,
         idempotencyKey: attemptId,
+        acknowledgement: {
+          version: CHECKOUT_ACKNOWLEDGEMENT.version,
+          acceptedAt: new Date().toISOString(),
+        },
       });
       if (!session.url) throw new Error("Stripe returned no checkout URL");
       return { ok: true, data: { url: session.url } };
@@ -170,6 +219,7 @@ export const getSodOrderStatus = createServerFn({ method: "GET" })
         routeKm: s.metadata.route_km,
         deliveryAddress: s.metadata.delivery_address,
         email: s.customer_details?.email ?? null,
+        confirmationEmail: confirmationEmailConfigured(),
       };
     } catch (error) {
       console.error("[sod] session lookup failed", error);

@@ -104,7 +104,7 @@ export function ArticleCard({
       <div className="@container flex flex-1 flex-col p-7 md:p-8">
         <p className="flex items-center justify-between gap-4 text-xs font-semibold uppercase tracking-[0.14em] text-bronze [.surface-ink_&]:text-gold [.surface-forest_&]:text-gold">
           <span>{article.category}</span>
-          <span className="font-medium normal-case tracking-normal opacity-80">
+          <span className="font-medium normal-case tracking-normal">
             {article.readMinutes} min read
           </span>
         </p>

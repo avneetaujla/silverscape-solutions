@@ -1,47 +1,21 @@
 import { useEffect } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import {
-  GA_MEASUREMENT_ID,
-  META_PIXEL_ID,
-  gaBootstrap,
-  metaPixelBootstrap,
   trackEvent,
   trackPageView,
   type AnalyticsEvent,
 } from "@/lib/analytics";
 
-/** Third-party tags, rendered only when their IDs are configured. */
-export function AnalyticsScripts() {
-  return (
-    <>
-      {GA_MEASUREMENT_ID && (
-        <>
-          <script
-            async
-            src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_MEASUREMENT_ID)}`}
-          />
-          <script
-            dangerouslySetInnerHTML={{ __html: gaBootstrap(GA_MEASUREMENT_ID) }}
-          />
-        </>
-      )}
-      {META_PIXEL_ID && (
-        <script
-          dangerouslySetInnerHTML={{
-            __html: metaPixelBootstrap(META_PIXEL_ID),
-          }}
-        />
-      )}
-    </>
-  );
-}
-
-/** Page views on navigation plus one delegated listener for phone, email and CTA clicks. */
+/**
+ * Page views on navigation plus one delegated listener for phone, email and
+ * CTA clicks. Every call is a no-op until the visitor has consented
+ * (see ConsentManager); no tag is loaded server-side.
+ */
 export function useAnalytics() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   useEffect(() => {
-    trackPageView(pathname);
+    trackPageView();
   }, [pathname]);
 
   useEffect(() => {
@@ -51,9 +25,9 @@ export function useAnalytics() {
       const href = anchor.getAttribute("href") ?? "";
       const location = window.location.pathname;
       if (href.startsWith("tel:")) {
-        trackEvent("phone_click", { link_location: location });
+        trackEvent("phone_clicked", { link_location: location });
       } else if (href.startsWith("mailto:")) {
-        trackEvent("email_click", { link_location: location });
+        trackEvent("email_clicked", { link_location: location });
       }
       if (
         (anchor.dataset.track as AnalyticsEvent | undefined) ===

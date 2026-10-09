@@ -78,7 +78,7 @@ export const OUTDOOR: ServiceDetail[] = [
       },
       {
         t: "Underground utilities",
-        d: "Any digging starts with a free Ontario One Call locate. We handle the request before work begins.",
+        d: "Any digging should start with an Ontario One Call locate. Where a utility locate is required, that should be addressed before the relevant work begins.",
       },
     ],
     process: [
@@ -168,7 +168,7 @@ export const OUTDOOR: ServiceDetail[] = [
       },
       {
         t: "Permits and bylaws",
-        d: "Raised decks, some retaining walls and pool-adjacent work can need permits. We confirm requirements with your municipality before building.",
+        d: "Raised decks, some retaining walls and pool-adjacent work can need permits. Those requirements vary by municipality and should be confirmed before work begins.",
       },
     ],
     process: [
@@ -376,8 +376,8 @@ export const OUTDOOR: ServiceDetail[] = [
       "Pressure-treated, cedar and composite decks with railings, stairs and lighting designed around how you entertain.",
     image: "raised-composite-deck",
     intro: [
-      "A deck should feel like an extension of the house: the right height off the door, comfortable stairs, railings that do not block the view, and framing that will not move after a few freeze-thaw cycles.",
-      "We design the layout with you, confirm permit requirements, and build on footings sized for Ontario frost.",
+      "A deck should feel like an extension of the house: the right height off the door, comfortable stairs, railings that do not block the view, and framing planned for freeze-thaw.",
+      "We design the layout with you. Where a permit applies, that requirement should be addressed before work begins. Footings are sized for the site and for seasonal freeze-thaw.",
     ],
     outcomes: [
       {
@@ -386,7 +386,7 @@ export const OUTDOOR: ServiceDetail[] = [
       },
       {
         t: "Built for frost",
-        d: "Footings and framing designed for freeze-thaw, so the deck stays level.",
+        d: "Footings and framing designed with freeze-thaw and frost heave in mind.",
       },
       {
         t: "Lower upkeep options",
@@ -395,7 +395,7 @@ export const OUTDOOR: ServiceDetail[] = [
     ],
     scope: [
       "Layout and design",
-      "Permit drawings and applications where required",
+      "Permit coordination where a permit applies",
       "Footings and structural framing",
       "Pressure-treated, cedar or composite decking",
       "Aluminum, glass or wood railings",
@@ -406,7 +406,7 @@ export const OUTDOOR: ServiceDetail[] = [
     planning: [
       {
         t: "Permits",
-        d: 'Ontario decks more than 600 mm (about 24") above grade, or attached to the house, typically need a building permit. We confirm with your municipality.',
+        d: "Permit requirements vary by municipality and by the deck. Raised and attached decks often need a building permit. Those requirements should be confirmed before work begins.",
       },
       {
         t: "Composite vs wood",
@@ -419,18 +419,18 @@ export const OUTDOOR: ServiceDetail[] = [
     ],
     process: [
       { t: "Design", d: "Size, height, stairs and materials." },
-      { t: "Permit", d: "Drawings and municipal approval where required." },
+      { t: "Permit", d: "Permit coordination where a permit applies." },
       { t: "Build", d: "Footings, framing, decking and railings." },
       { t: "Finish", d: "Trim, skirting, lighting and final inspection." },
     ],
     faq: [
       {
         q: "Do I need a permit for my deck?",
-        a: "Often, yes — particularly for raised or attached decks. Requirements vary by municipality; we confirm before building.",
+        a: "It depends on the municipality and the deck. Raised and attached decks often need a permit. Requirements should be confirmed before work begins.",
       },
       {
         q: "Can you replace boards on an existing frame?",
-        a: "If the existing framing is sound and to code, resurfacing can be an option. We inspect it first.",
+        a: "If the existing framing is sound, resurfacing can be an option. We inspect it first.",
       },
       {
         q: "What railing options are available?",
@@ -452,11 +452,11 @@ export const OUTDOOR: ServiceDetail[] = [
     tagline:
       "Privacy that looks architectural — straight lines, solid posts, gates that close.",
     summary:
-      "Privacy, horizontal and modern fences with posts set for frost and gates that keep closing years later.",
+      "Privacy, horizontal and modern fences with posts set for the site and braced gates built to keep closing properly.",
     image: "horizontal-privacy-fence",
     intro: [
       "A fence is mostly about the parts you cannot see: post depth, spacing and gate framing. Get those wrong and the fence leans and gates sag within a few winters.",
-      "We confirm lot lines and bylaw heights, set posts properly, and finish with clean tops, caps and hardware.",
+      "We set posts for the site and finish with clean tops, caps and hardware. Lot lines and fence-height rules should be confirmed before work begins.",
     ],
     outcomes: [
       {
@@ -465,7 +465,7 @@ export const OUTDOOR: ServiceDetail[] = [
       },
       {
         t: "Straight for years",
-        d: "Posts set below the frost line and braced gates that do not drag.",
+        d: "Posts set with seasonal movement in mind, and braced gates built not to drag.",
       },
       {
         t: "Designed, not generic",
@@ -487,7 +487,7 @@ export const OUTDOOR: ServiceDetail[] = [
       },
       {
         t: "Height bylaws",
-        d: "Most municipalities cap backyard fences at around 6 to 8 feet, with lower limits in front yards. We confirm your local rules.",
+        d: "Height limits vary by municipality, and front yards are often treated differently from backyards. Local rules should be confirmed before work begins.",
       },
       {
         t: "Pools",
@@ -496,14 +496,14 @@ export const OUTDOOR: ServiceDetail[] = [
     ],
     process: [
       { t: "Layout", d: "Confirm lines, heights and gate locations." },
-      { t: "Posts", d: "Locates, then posts set below frost depth." },
+      { t: "Posts", d: "Locates, then posts set for the site." },
       { t: "Panels", d: "Rails, boards and gates installed." },
       { t: "Finish", d: "Caps, hardware and final adjustments." },
     ],
     faq: [
       {
         q: "How tall can my fence be?",
-        a: "It depends on your municipality and whether it is a front or back yard. We confirm the bylaw before quoting.",
+        a: "It depends on your municipality and whether it is a front or back yard. Local rules should be confirmed before work begins.",
       },
       {
         q: "Can you reuse my existing posts?",
@@ -525,7 +525,7 @@ export const OUTDOOR: ServiceDetail[] = [
     metaTitle: "Interlocking Driveways, Walkways & Patios — Southern Ontario",
     metaDescription:
       "Interlocking driveways, walkways, steps and patios built on a properly compacted base. Serving Guelph, Kitchener, Waterloo, Cambridge and the GTA.",
-    tagline: "Stonework that stays level through Ontario winters.",
+    tagline: "Stonework on a base built for Ontario winters.",
     summary:
       "Driveways, walkways, steps and patios built on a properly excavated, compacted base — the part that decides how long it lasts.",
     image: "herringbone-driveway",
@@ -644,7 +644,7 @@ export const OUTDOOR: ServiceDetail[] = [
       },
       {
         t: "Fire features",
-        d: "Open-air fire rules differ by municipality. We confirm what is permitted where you live.",
+        d: "Open-air fire rules differ by municipality. What is permitted should be confirmed before a fire feature is planned.",
       },
       {
         t: "Sun and wind",
@@ -668,7 +668,7 @@ export const OUTDOOR: ServiceDetail[] = [
       },
       {
         q: "Do you install outdoor lighting?",
-        a: "We plan and coordinate low-voltage lighting as part of the build. Any line-voltage electrical work is done by a licensed electrician.",
+        a: "We plan low-voltage lighting as part of the build. Where line-voltage electrical work is required, an appropriately qualified electrician may be required as part of the project.",
       },
     ],
     related: ["interlocking", "decks", "yard-transformations"],
@@ -796,7 +796,7 @@ export const OUTDOOR: ServiceDetail[] = [
       },
       {
         t: "Permits",
-        d: "Some structures need permits. We confirm before building.",
+        d: "Some structures need permits. Requirements vary by municipality and project, and should be confirmed before work begins.",
       },
     ],
     process: [
@@ -1028,7 +1028,7 @@ export const INTERIOR: ServiceDetail[] = [
       "Feature and accent walls",
       "Niches and benches",
       "Waterproofing membranes",
-      "Electric in-floor heating with licensed electrical connection",
+      "Electric in-floor heating, where an appropriately qualified electrical connection may be required",
     ],
     planning: [
       {
@@ -1037,7 +1037,7 @@ export const INTERIOR: ServiceDetail[] = [
       },
       {
         t: "Heated floors",
-        d: "Electric heating mats go in before tile. The final connection is completed by a licensed electrician.",
+        d: "Electric heating mats go in before tile. Where a regulated electrical connection is required, an appropriately qualified electrician may be required.",
       },
       {
         t: "Grout choice",
@@ -1053,7 +1053,7 @@ export const INTERIOR: ServiceDetail[] = [
     faq: [
       {
         q: "Do you install heated tile floors?",
-        a: "Yes. Electric heating systems are installed under tile; the electrical connection is completed by a licensed electrician.",
+        a: "Yes. Electric heating systems are installed under tile. Where a regulated electrical connection is required, an appropriately qualified electrician may be required as part of the project.",
       },
       {
         q: "Can tile go over existing tile?",
@@ -1082,7 +1082,7 @@ export const INTERIOR: ServiceDetail[] = [
     image: "bathroom-floating-vanity",
     intro: [
       "A bathroom renovation involves more trades in less space than any other room. Demolition, plumbing, electrical, waterproofing, tile, fixtures and finishing all need to happen in the right order.",
-      "We plan the layout and selections with you up front, coordinate every trade on one schedule, and keep the work area protected from the rest of the home.",
+      "We plan the layout and selections with you up front, and keep the work area protected from the rest of the home.",
     ],
     outcomes: [
       {
@@ -1100,7 +1100,7 @@ export const INTERIOR: ServiceDetail[] = [
     ],
     scope: [
       "Full demolition and disposal",
-      "Plumbing and electrical by licensed trades",
+      "Plumbing and electrical, where an appropriately qualified trade may be required",
       "Waterproofing and membranes",
       "Floor and wall tile",
       "Shower and tub installation or conversion",
@@ -1138,7 +1138,7 @@ export const INTERIOR: ServiceDetail[] = [
       },
       {
         q: "Do you handle plumbing and electrical?",
-        a: "Yes, coordinated as part of the project and completed by appropriately licensed trades.",
+        a: "Where regulated plumbing or electrical work is required, an appropriately qualified trade may be required as part of the project.",
       },
       {
         q: "Can you work with fixtures I have already bought?",
@@ -1162,7 +1162,7 @@ export const INTERIOR: ServiceDetail[] = [
     image: "curbless-shower-tub",
     intro: [
       "Replacing a dated tub surround with a tiled walk-in shower is one of the most noticeable bathroom upgrades — and one of the easiest to get wrong behind the walls.",
-      "We handle demolition, drain and valve changes through licensed plumbers, waterproofing, tile and glass coordination as one sequence.",
+      "We handle demolition, waterproofing, tile and glass as one sequence. Where drain or valve work is regulated plumbing, an appropriately qualified plumber may be required as part of the project.",
     ],
     outcomes: [
       {
@@ -1182,7 +1182,7 @@ export const INTERIOR: ServiceDetail[] = [
       "Freestanding or alcove tub installation",
       "Waterproofing and sloped shower floors",
       "Niches and benches",
-      "Valve and drain updates by licensed plumbers",
+      "Valve and drain updates, where an appropriately qualified plumber may be required",
       "Glass enclosure coordination",
     ],
     planning: [
@@ -1258,7 +1258,7 @@ export const INTERIOR: ServiceDetail[] = [
       "Faucets and shower trim",
       "Toilet replacement",
       "Mirrors and medicine cabinets",
-      "Light fixtures (connected by licensed electricians)",
+      "Light fixtures, where an appropriately qualified electrician may be required",
       "Exhaust fan upgrades",
       "Accessories, trim and paint",
     ],
@@ -1293,7 +1293,7 @@ export const INTERIOR: ServiceDetail[] = [
       },
       {
         q: "Do you replace bathroom exhaust fans?",
-        a: "Yes, with electrical connections completed by a licensed electrician.",
+        a: "Yes. Where the connection is regulated electrical work, an appropriately qualified electrician may be required as part of the project.",
       },
     ],
     related: ["bathrooms", "showers-tubs", "flooring"],

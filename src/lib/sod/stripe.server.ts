@@ -44,9 +44,53 @@ export type CheckoutSession = {
   payment_status: "paid" | "unpaid" | "no_payment_required";
   amount_total: number | null;
   currency: string | null;
+  created?: number;
+  livemode?: boolean;
   customer_details?: { email?: string | null; name?: string | null } | null;
   metadata: Record<string, string>;
 };
+
+/**
+ * Verifies a Stripe webhook signature (`Stripe-Signature: t=…,v1=…`) with the
+ * endpoint secret, rejecting events older than five minutes.
+ */
+export async function verifyStripeSignature(
+  payload: string,
+  header: string | null,
+  secret: string,
+  toleranceSec = 300,
+) {
+  if (!header) return false;
+  const parts = header.split(",").map((p) => p.split("=") as [string, string]);
+  const timestamp = parts.find(([k]) => k === "t")?.[1];
+  const signatures = parts.filter(([k]) => k === "v1").map(([, v]) => v);
+  if (!timestamp || !signatures.length) return false;
+  if (Math.abs(Date.now() / 1000 - Number(timestamp)) > toleranceSec)
+    return false;
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const mac = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    new TextEncoder().encode(`${timestamp}.${payload}`),
+  );
+  const expected = Array.from(new Uint8Array(mac), (b) =>
+    b.toString(16).padStart(2, "0"),
+  ).join("");
+  return signatures.some((sig) => timingSafeEqual(sig, expected));
+}
+
+function timingSafeEqual(a: string, b: string) {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
 
 /** Creates a hosted Stripe Checkout session for a server-calculated sod quote. Card data never touches our servers. */
 export async function createSodCheckoutSession(input: {
@@ -54,12 +98,15 @@ export async function createSodCheckoutSession(input: {
   quote: SodQuote;
   origin: string;
   idempotencyKey: string;
+  acknowledgement: { version: string; acceptedAt: string };
 }) {
-  const { order, quote, origin } = input;
+  const { order, quote, origin, acknowledgement } = input;
   const metadata: Record<string, string> = {
     order_type: "sod_delivery",
     rolls: String(quote.rolls),
     route_km: quote.routeKm.toFixed(1),
+    sod_subtotal_cents: String(quote.sodSubtotalCents),
+    sod_hst_cents: String(quote.sodHstCents),
     sod_total_cents: String(quote.sodTotalCents),
     delivery_cents: String(quote.deliveryCents),
     total_cents: String(quote.totalCents),
@@ -67,6 +114,8 @@ export async function createSodCheckoutSession(input: {
     customer_name: order.name.slice(0, 100),
     customer_phone: order.phone.slice(0, 40),
     notes: (order.notes ?? "").slice(0, 500),
+    terms_version: acknowledgement.version,
+    terms_accepted_at: acknowledgement.acceptedAt,
   };
 
   const body = new URLSearchParams();

@@ -126,13 +126,13 @@ const OUTDOOR_CATEGORIES: Category[] = [
   },
   {
     title: "Outdoor Structures",
-    body: "Decks, fences and custom builds framed for frost, load and daily use.",
+    body: "Decks, fences and custom builds framed for seasonal weather, load and daily use.",
     primary: "decks",
     links: ["fences", "custom-exterior"],
   },
   {
     title: "Hardscaping & Surfaces",
-    body: "Driveways, walkways, patios and lawns on a base that stays level through winter.",
+    body: "Driveways, walkways, patios and lawns on a base built for freeze-thaw.",
     primary: "interlocking",
     links: ["patios-outdoor-living", "sod-installation"],
   },
@@ -327,8 +327,8 @@ function HomePage() {
               )}
             </h2>
             <p className="type-lead mt-5 measure text-muted-dark">
-              One product — fresh Kentucky Bluegrass in 2 ft × 5 ft rolls —
-              picked up from the farm on your delivery route.
+              One product — Kentucky Bluegrass in 2 ft × 5 ft rolls — delivered
+              on a priced driving route.
             </p>
             <ol className="mt-8 grid gap-3">
               {[
@@ -410,7 +410,7 @@ function HomePage() {
           </div>
           <div className="card-light self-start p-8 md:p-10">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-bronze">
-              Every proposal includes
+              A written proposal sets out
             </p>
             <ul className="list-check mt-6 grid gap-4 text-forest-deep">
               {[

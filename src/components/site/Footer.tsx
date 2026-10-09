@@ -5,13 +5,24 @@ import { CTA } from "@/components/site/CTA";
 import { INTERIOR, OUTDOOR, servicePath } from "@/lib/services-data";
 import { PRIMARY_LOCATIONS, GTA_CITIES } from "@/lib/locations-data";
 import { BUSINESS } from "@/lib/site";
+import { openCookieSettings } from "@/lib/consent";
 
 const linkCls =
   "text-cream/80 hover:text-cream underline-offset-4 hover:underline";
+const legalCls =
+  "inline-flex min-h-8 items-center text-cream/75 underline-offset-4 hover:text-cream hover:underline";
+
+const LEGAL_LINKS = [
+  { to: "/privacy", label: "Privacy Policy" },
+  { to: "/terms", label: "Terms & Conditions" },
+  { to: "/cookies", label: "Cookie Policy" },
+  { to: "/refunds", label: "Refund & Cancellation Policy" },
+  { to: "/accessibility", label: "Accessibility" },
+] as const;
 
 export function Footer() {
   return (
-    <footer className="surface-forest border-t border-cream/10">
+    <footer className="surface-forest border-t border-cream/10 print:hidden">
       <div className="container-site py-16 md:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.2fr_2fr]">
           <div>
@@ -128,12 +139,31 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-cream/10">
-        <div className="container-site flex flex-col gap-2 py-6 text-sm text-cream/70 sm:flex-row sm:items-center sm:justify-between">
+        <div className="container-site flex flex-col gap-3 py-6 text-sm text-cream/70 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
           <p>
             © {new Date().getFullYear()} SilverScape Solutions. All rights
             reserved.
           </p>
-          <p>Guelph · Kitchener · Waterloo · Cambridge · GTA</p>
+          <nav aria-label="Legal">
+            <ul className="flex flex-wrap gap-x-5 gap-y-1">
+              {LEGAL_LINKS.map((l) => (
+                <li key={l.to}>
+                  <Link to={l.to} className={legalCls}>
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <button
+                  type="button"
+                  onClick={openCookieSettings}
+                  className={legalCls}
+                >
+                  Cookie Settings
+                </button>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </footer>

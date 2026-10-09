@@ -9,8 +9,18 @@ const escapeHtml = (s: string) =>
       ]!,
   );
 
-function leadRows(lead: Lead) {
-  return [
+/** CASL consent evidence: what was shown, when, and through which channel. */
+export type MarketingConsentRecord = {
+  granted: boolean;
+  recordedAt: string;
+  wordingVersion: string;
+  wording: string;
+  channel: string;
+  source: string;
+};
+
+function leadRows(lead: Lead, marketing: MarketingConsentRecord | null) {
+  const rows: [string, string][] = [
     ["Name", lead.name],
     ["Phone", lead.phone],
     ["Email", lead.email],
@@ -19,17 +29,28 @@ function leadRows(lead: Lead) {
     ["Service", lead.service],
     ["Timing", lead.timing],
     ["Submitted from", lead.pagePath],
-  ] as const;
+  ];
+  if (marketing) {
+    rows.push([
+      "Marketing emails",
+      marketing.granted
+        ? `Opted in ${marketing.recordedAt} (${marketing.channel}, wording v${marketing.wordingVersion}, ${marketing.source})`
+        : "Not opted in. Service replies only.",
+    ]);
+  } else {
+    rows.push(["Marketing emails", "Not requested. Service replies only."]);
+  }
+  return rows;
 }
 
-async function sendEmail(lead: Lead) {
+async function sendEmail(lead: Lead, marketing: MarketingConsentRecord | null) {
   const apiKey = process.env.RESEND_API_KEY?.trim();
   const to = process.env.LEAD_NOTIFICATION_EMAIL?.trim();
   if (!apiKey || !to) return null;
   const from =
     process.env.LEAD_FROM_EMAIL?.trim() ||
     "SilverScape Website <onboarding@resend.dev>";
-  const rows = leadRows(lead);
+  const rows = leadRows(lead, marketing);
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -61,7 +82,10 @@ async function sendEmail(lead: Lead) {
   return "email";
 }
 
-async function sendWebhook(lead: Lead) {
+async function sendWebhook(
+  lead: Lead,
+  marketing: MarketingConsentRecord | null,
+) {
   const url = process.env.LEAD_WEBHOOK_URL?.trim();
   if (!url) return null;
   const headers: Record<string, string> = {
@@ -76,12 +100,12 @@ async function sendWebhook(lead: Lead) {
       type: "quote_request",
       submittedAt: new Date().toISOString(),
       ...Object.fromEntries(
-        leadRows(lead).map(([k, v]) => [
-          k.toLowerCase().replace(/\s+/g, "_"),
-          v,
-        ]),
+        leadRows(lead, null)
+          .slice(0, -1)
+          .map(([k, v]) => [k.toLowerCase().replace(/\s+/g, "_"), v]),
       ),
       description: lead.description,
+      marketing_consent: marketing,
     }),
   });
   if (!res.ok) throw new Error(`Webhook ${res.status}`);
@@ -89,9 +113,15 @@ async function sendWebhook(lead: Lead) {
 }
 
 /** Delivers a lead to every configured channel. Succeeds if at least one channel accepts it. */
-export async function deliverLead(lead: Lead) {
+export async function deliverLead(
+  lead: Lead,
+  marketing: MarketingConsentRecord | null,
+) {
   const attempts: PromiseSettledResult<string | null>[] =
-    await Promise.allSettled([sendEmail(lead), sendWebhook(lead)]);
+    await Promise.allSettled([
+      sendEmail(lead, marketing),
+      sendWebhook(lead, marketing),
+    ]);
   const delivered = attempts
     .filter(
       (a): a is PromiseFulfilledResult<string | null> =>

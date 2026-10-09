@@ -26,12 +26,12 @@ const STANDARD: Record<
     title: "Built for Ontario winters",
     points: [
       {
-        t: "Below the frost line",
-        d: "Deck footings and fence posts go to frost depth — about 1.2 m here — so frost heave doesn't lift them.",
+        t: "Built for freeze-thaw",
+        d: "Deck and fence foundations are planned for the site and for Southern Ontario freeze-thaw conditions.",
       },
       {
         t: "A base that drains",
-        d: "Compacted granular base and grading that sheds water keep pavers and lawns level through freeze-thaw.",
+        d: "Base preparation and grading are chosen for the site, so water can drain through freeze-thaw cycles.",
       },
       {
         t: "Water away from the house",

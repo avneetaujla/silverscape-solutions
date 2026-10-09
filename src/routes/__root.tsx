@@ -11,13 +11,11 @@ import appCss from "../../styles.css?url";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { CTA } from "@/components/site/CTA";
-import { AnalyticsScripts, useAnalytics } from "@/components/site/Analytics";
+import { useAnalytics } from "@/components/site/Analytics";
+import { ConsentManager } from "@/components/site/ConsentManager";
 import { buttonVariants } from "@/components/ui/button";
 import { localBusinessSchema } from "@/lib/seo";
 import { BUSINESS } from "@/lib/site";
-
-const FONTS_URL =
-  "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap";
 
 function NotFoundComponent() {
   return (
@@ -100,13 +98,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { name: "format-detection", content: "telephone=no" },
       ],
       links: [
-        { rel: "preconnect", href: "https://fonts.googleapis.com" },
-        {
-          rel: "preconnect",
-          href: "https://fonts.gstatic.com",
-          crossOrigin: "anonymous",
-        },
-        { rel: "stylesheet", href: FONTS_URL },
         { rel: "stylesheet", href: appCss },
         {
           rel: "icon",
@@ -142,7 +133,6 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="en-CA">
       <head>
         <HeadContent />
-        <AnalyticsScripts />
       </head>
       <body>
         {children}
@@ -164,6 +154,7 @@ function RootComponent() {
         </main>
         <Footer />
       </div>
+      <ConsentManager />
     </QueryClientProvider>
   );
 }

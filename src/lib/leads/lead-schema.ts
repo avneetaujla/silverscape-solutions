@@ -37,6 +37,8 @@ export const leadSchema = z
       .max(3000, "Please keep the description under 3,000 characters"),
     /** Honeypot — real visitors never see or fill this. */
     website: z.string().max(0).optional().default(""),
+    /** Optional marketing-email opt-in. Never required, never pre-checked. */
+    marketingOptIn: z.boolean().optional().default(false),
     elapsedMs: z.number().int().nonnegative(),
     pagePath: z.string().max(200).optional().default("/"),
   })

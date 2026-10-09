@@ -101,7 +101,7 @@ export const ARTICLES: Article[] = [
     body: [
       {
         type: "p",
-        text: "Ordering the right amount of sod saves you a second delivery charge and keeps fresh sod from sitting unused. Here is the simple method we recommend.",
+        text: "Ordering the right amount of sod saves you a second delivery charge and keeps extra sod from sitting unused. Here is the simple method we recommend.",
       },
       { type: "h2", text: "Step 1: Break the lawn into simple shapes" },
       {
@@ -171,12 +171,12 @@ export const ARTICLES: Article[] = [
       { type: "h2", text: "Delivery" },
       {
         type: "p",
-        text: "Delivery is charged per kilometre of the complete driving route: from our base in Guelph, to the sod farm, to your address, and back to Guelph. The distance comes from a mapping service using real roads — not a straight line on a map.",
+        text: "Delivery is charged per kilometre of the complete driving route: from our base in Guelph, to the pickup stop, to your address, and back to Guelph. The distance comes from a mapping service using real roads — not a straight line on a map.",
       },
       { type: "h2", text: "Why route-based delivery?" },
       {
         type: "p",
-        text: "Flat zones overcharge customers close to the route and undercharge distant ones. Route-based pricing is fairer: Guelph, Kitchener, Waterloo and Cambridge addresses are typically the least expensive to deliver to.",
+        text: "Delivery is priced on the driving route, so a shorter route usually costs less than a longer one. The price for your address is calculated before you pay.",
       },
       { type: "h2", text: "When you see the price" },
       {
@@ -213,7 +213,7 @@ export const ARTICLES: Article[] = [
       { type: "h2", text: "Permits" },
       {
         type: "p",
-        text: 'In Ontario, decks more than 600 mm (about 24") above grade — and in many municipalities, decks attached to the house — typically require a building permit. Ground-level patios generally do not, though drainage and lot-coverage rules still apply.',
+        text: "Permit requirements vary by municipality and by the project. Raised and attached decks often need a building permit. Ground-level patios often do not, though drainage and lot-coverage rules can still apply. Requirements should be confirmed before work begins.",
       },
       { type: "h2", text: "Maintenance" },
       {
@@ -250,7 +250,7 @@ export const ARTICLES: Article[] = [
       "Why interlocking sinks, heaves and shifts in Ontario — and the excavation, base, edge restraint and drainage details that prevent it.",
     category: "Outdoor Planning",
     excerpt:
-      "Freeze-thaw is relentless. Here is what separates interlocking that stays level from interlocking that fails in a few seasons.",
+      "Freeze-thaw is relentless. Here is what separates interlocking that holds up from interlocking that fails in a few seasons.",
     readMinutes: 5,
     published: PUBLISHED,
     updated: PUBLISHED,
@@ -432,7 +432,7 @@ export const ARTICLES: Article[] = [
         type: "list",
         items: [
           "Protection and demolition",
-          "Plumbing and electrical rough-in by licensed trades",
+          "Plumbing and electrical rough-in, where an appropriately qualified trade may be required",
           "Waterproofing",
           "Tile",
           "Vanity, toilet and fixtures",
@@ -639,7 +639,7 @@ export const ARTICLES: Article[] = [
       { type: "h2", text: "Freeze-thaw" },
       {
         type: "p",
-        text: "Repeated freezing and thawing heaves poorly built hardscape and shallow footings. Proper base depth, drainage and frost-depth footings are non-negotiable.",
+        text: "Repeated freezing and thawing heaves poorly built hardscape and shallow footings. Base depth, drainage and footings should be planned for the site and for freeze-thaw.",
       },
       { type: "h2", text: "Clay soils" },
       {

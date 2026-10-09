@@ -19,9 +19,12 @@ import { BUSINESS } from "@/lib/site";
 import { trackEvent } from "@/lib/analytics";
 import { breadcrumbSchema, faqSchema, seo, serviceSchema } from "@/lib/seo";
 import { SOD_PRODUCT } from "@/lib/sod/product";
+import { LEGAL, SOD_POLICY, serviceEmail } from "@/lib/legal";
 import {
+  DELIVERY_CENTS_PER_KM,
   HST_PERCENT,
   MAX_ROLLS,
+  SOD_PRICE_PER_ROLL_CENTS,
   formatCents,
   sodOrderSchema,
   type SodOrderInput,
@@ -35,11 +38,11 @@ const PATH = "/sod-ordering";
 const SOD_FAQ = [
   {
     q: "What kind of sod do you deliver?",
-    a: `We supply one product: fresh Kentucky Bluegrass sod in ${SOD_PRODUCT.rollDimensions} rolls, each covering about ${SOD_PRODUCT.rollSqFt} square feet.`,
+    a: `We supply one product: Kentucky Bluegrass sod in ${SOD_PRODUCT.rollDimensions} rolls, each covering about ${SOD_PRODUCT.rollSqFt} square feet.`,
   },
   {
     q: "How is my delivery cost calculated?",
-    a: "Delivery is priced on the full driving route for your order: from our base in Guelph, to the sod farm, to your address and back. We use a real routing service, not straight-line distance, and show you every leg before you pay.",
+    a: "Delivery is priced on the full driving route for your order: from our base in Guelph, to the pickup stop, to your address and back. We use a real routing service, not straight-line distance, and show you every leg before you pay.",
   },
   {
     q: "When will I see the price?",
@@ -47,7 +50,11 @@ const SOD_FAQ = [
   },
   {
     q: "How do I pay?",
-    a: "Payment is handled by Stripe Checkout. SilverScape never sees or stores your card details.",
+    a: "Payment card details are handled through Stripe Checkout and are not stored by SilverScape Solutions.",
+  },
+  {
+    q: "Can I cancel or change a sod order?",
+    a: "Sod orders are final once submitted. We don't offer voluntary cancellations, refunds or exchanges after an order is placed, except where required by law, so please check your order before paying. For delivery questions, call or email us as soon as possible. See our Refund & Cancellation Policy for details.",
   },
   {
     q: "Can you install the sod as well?",
@@ -65,7 +72,7 @@ export const Route = createFileRoute("/sod-ordering/")({
       title:
         "Order Kentucky Bluegrass Sod Online — Delivery from Guelph | SilverScape",
       description:
-        "Order fresh Kentucky Bluegrass sod online for delivery across Guelph, Kitchener-Waterloo, Cambridge and the GTA. Itemized total before you pay, secure Stripe checkout.",
+        "Order Kentucky Bluegrass sod online for delivery in Guelph, Kitchener-Waterloo, Cambridge and the GTA. Itemized total before you pay, secure Stripe checkout.",
       path: PATH,
       image: media("sod-farm-field").src,
       jsonLd: [
@@ -73,7 +80,7 @@ export const Route = createFileRoute("/sod-ordering/")({
           name: "Kentucky Bluegrass sod delivery",
           serviceType: "Sod delivery",
           description:
-            "Fresh Kentucky Bluegrass sod delivered to residential addresses in Southern Ontario.",
+            "Kentucky Bluegrass sod delivered to residential addresses in Guelph, Kitchener-Waterloo, Cambridge and the GTA.",
           path: PATH,
         }),
         breadcrumbSchema([
@@ -193,6 +200,8 @@ function SodOrderForm({ cancelled }: { cancelled: boolean }) {
   const [attemptId, setAttemptId] = useState<string>("");
   const [problem, setProblem] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [accepted, setAccepted] = useState(false);
+  const [ackError, setAckError] = useState<string | null>(null);
   const mounted = useRef(false);
 
   useEffect(() => {
@@ -238,6 +247,8 @@ function SodOrderForm({ cancelled }: { cancelled: boolean }) {
       if (res.ok) {
         setQuote(res.data);
         setAttemptId(newAttemptId());
+        setAccepted(false);
+        setAckError(null);
         setStep(4);
         trackEvent("sod_quote_calculated", {
           rolls: res.data.rolls,
@@ -283,6 +294,13 @@ function SodOrderForm({ cancelled }: { cancelled: boolean }) {
 
   async function checkout() {
     if (!quote || busy) return;
+    if (!accepted) {
+      setAckError(
+        "Please confirm you've reviewed your order and agree to the Terms & Conditions and Refund & Cancellation Policy.",
+      );
+      document.getElementById(id("ack"))?.focus();
+      return;
+    }
     setBusy("checkout");
     setProblem(null);
     setNotice(null);
@@ -292,10 +310,11 @@ function SodOrderForm({ cancelled }: { cancelled: boolean }) {
           ...toOrder(values),
           expectedTotalCents: quote.totalCents,
           attemptId,
+          acceptedTerms: true,
         },
       });
       if (res.ok) {
-        trackEvent("begin_checkout", {
+        trackEvent("sod_checkout_started", {
           value: quote.totalCents / 100,
           currency: "CAD",
           rolls: quote.rolls,
@@ -542,7 +561,18 @@ function SodOrderForm({ cancelled }: { cancelled: boolean }) {
           )}
 
           {step === 4 && quote && (
-            <Summary quote={quote} values={values} onEdit={(s) => setStep(s)} />
+            <Summary
+              quote={quote}
+              values={values}
+              onEdit={(s) => setStep(s)}
+              ackId={id("ack")}
+              accepted={accepted}
+              ackError={ackError}
+              onAccept={(v) => {
+                setAccepted(v);
+                if (v) setAckError(null);
+              }}
+            />
           )}
 
           <div className="mt-8 flex flex-col-reverse gap-3 border-t border-forest-deep/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
@@ -591,6 +621,7 @@ function SodOrderForm({ cancelled }: { cancelled: boolean }) {
                 size="lg"
                 disabled={busy !== null || !quote}
                 onClick={checkout}
+                className="whitespace-normal text-center"
               >
                 {busy === "checkout" ? (
                   <>
@@ -602,11 +633,12 @@ function SodOrderForm({ cancelled }: { cancelled: boolean }) {
                     <Loader2 aria-hidden className="animate-spin" />{" "}
                     Recalculating…
                   </>
-                ) : (
+                ) : quote ? (
                   <>
-                    <Lock aria-hidden /> Pay securely with Stripe
+                    <Lock aria-hidden /> Place Order &amp; Pay{" "}
+                    {formatCents(quote.totalCents)} CAD
                   </>
-                )}
+                ) : null}
               </Button>
             )}
           </div>
@@ -682,13 +714,16 @@ function OrderPanel({
         <div className="mt-6 flex gap-3 text-sm text-muted-light">
           <Truck aria-hidden className="mt-0.5 h-5 w-5 shrink-0 text-forest" />
           <p>
-            Delivery is priced on the full driving route — Guelph base, sod
-            farm, your address and back — and shown leg by leg before you pay.
+            Delivery is priced on the full driving route — Guelph base, pickup,
+            your address and back — and shown leg by leg before you pay.
           </p>
         </div>
         <div className="mt-4 flex gap-3 text-sm text-muted-light">
           <Lock aria-hidden className="mt-0.5 h-5 w-5 shrink-0 text-forest" />
-          <p>Payment through Stripe Checkout. We never see your card.</p>
+          <p>
+            Payment card details are handled through Stripe Checkout and are not
+            stored by SilverScape Solutions.
+          </p>
         </div>
       </div>
       <p className="mt-5 text-sm text-muted-light">
@@ -727,15 +762,30 @@ function Summary({
   quote,
   values,
   onEdit,
+  ackId,
+  accepted,
+  ackError,
+  onAccept,
 }: {
   quote: SodQuote;
   values: FormValues;
   onEdit: (s: Step) => void;
+  ackId: string;
+  accepted: boolean;
+  ackError: string | null;
+  onAccept: (v: boolean) => void;
 }) {
+  const supplierName =
+    LEGAL.legalBusinessName && LEGAL.legalBusinessName !== LEGAL.operatingName
+      ? `${LEGAL.legalBusinessName}, operating as ${LEGAL.operatingName}`
+      : LEGAL.operatingName;
   return (
     <div className="mt-6 grid gap-6">
       <dl className="grid gap-4 rounded-[var(--radius-md)] bg-stone-warm/45 p-5 text-[0.9375rem] sm:grid-cols-2">
-        <SummaryItem label="Product" value={SOD_PRODUCT.name} />
+        <SummaryItem
+          label="Product"
+          value={`${SOD_PRODUCT.name} in ${SOD_PRODUCT.rollDimensions} rolls, about ${SOD_PRODUCT.rollSqFt} sq ft each`}
+        />
         <SummaryItem
           label="Rolls"
           value={`${quote.rolls.toLocaleString("en-CA")} rolls · about ${quote.coverageSqFt.toLocaleString("en-CA")} sq ft`}
@@ -748,7 +798,7 @@ function Summary({
         />
         <SummaryItem
           label="Contact"
-          value={`${values.name} · ${values.email}`}
+          value={`${values.name} · ${values.email} · ${values.phone}`}
           onEdit={() => onEdit(3)}
         />
       </dl>
@@ -784,16 +834,20 @@ function Summary({
           <caption className="sr-only">Itemized order total</caption>
           <tbody>
             <PriceRow
-              label={`Sod — ${quote.rolls.toLocaleString("en-CA")} rolls`}
+              label={`Sod — ${quote.rolls.toLocaleString("en-CA")} rolls × ${formatCents(SOD_PRICE_PER_ROLL_CENTS)}`}
               cents={quote.sodSubtotalCents}
+            />
+            <PriceRow
+              label={`Delivery — ${quote.routeKm.toFixed(1)} km × ${formatCents(DELIVERY_CENTS_PER_KM)}`}
+              cents={quote.deliveryCents}
+            />
+            <PriceRow
+              label="Subtotal before tax"
+              cents={quote.sodSubtotalCents + quote.deliveryCents}
             />
             <PriceRow
               label={`HST on sod (${HST_PERCENT}%)`}
               cents={quote.sodHstCents}
-            />
-            <PriceRow
-              label={`Delivery — ${quote.routeKm.toFixed(1)} km route`}
-              cents={quote.deliveryCents}
             />
           </tbody>
           <tfoot>
@@ -802,7 +856,7 @@ function Summary({
                 scope="row"
                 className="pt-4 text-left font-serif text-2xl font-semibold text-forest-deep"
               >
-                Total
+                Total (CAD)
               </th>
               <td className="pt-4 text-right font-serif text-2xl font-semibold tabular-nums text-forest-deep">
                 {formatCents(quote.totalCents)}
@@ -811,11 +865,103 @@ function Summary({
           </tfoot>
         </table>
         <p className="mt-3 text-sm text-muted-light">
-          Prices in CAD. HST ({HST_PERCENT}%) is applied to the sod. Delivery is
-          charged at the route rate shown, with no additional tax. Your card is
-          charged by Stripe only after you confirm on the next screen.
+          All prices are in Canadian dollars. HST ({HST_PERCENT}%) is charged on
+          the sod; no tax is added to the delivery charge. There are no other
+          fees.
         </p>
       </div>
+
+      <div>
+        <h4 className="text-xs font-semibold uppercase tracking-[0.16em] text-bronze">
+          Delivery, payment &amp; policies
+        </h4>
+        <dl className="mt-3 grid gap-3 text-[0.9375rem]">
+          <TermRow label="Delivery">
+            {SOD_POLICY.deliveryArrangements ??
+              "After payment we'll contact you to confirm your delivery date. Sod is perishable, so plan to lay it the day it arrives."}
+          </TermRow>
+          <TermRow label="Payment">
+            Paid in full on Stripe&rsquo;s secure checkout page, using the
+            methods Stripe shows there. Payment card details are handled through
+            Stripe Checkout and are not stored by SilverScape Solutions. Nothing
+            is charged until you confirm on that page.
+          </TermRow>
+          <TermRow label="Limits">
+            Ontario delivery addresses only, up to{" "}
+            {MAX_ROLLS.toLocaleString("en-CA")} rolls per online order. For
+            larger orders, call us.
+          </TermRow>
+          <TermRow label="Cancellations & refunds">
+            Sod orders are final once submitted: no voluntary cancellations,
+            refunds or exchanges after you place your order, except where
+            required by law. Your statutory rights are not affected. See our{" "}
+            <Link to="/refunds" target="_blank" className="link-inline">
+              Refund &amp; Cancellation Policy
+              <span className="sr-only"> (opens in a new tab)</span>
+            </Link>
+            .
+          </TermRow>
+          <TermRow label="Supplier">
+            {supplierName}
+            {LEGAL.businessAddress ? `, ${LEGAL.businessAddress}` : ""} ·{" "}
+            <a href={LEGAL.businessPhoneHref} className="link-inline">
+              {LEGAL.businessPhone}
+            </a>{" "}
+            ·{" "}
+            <a
+              href={`mailto:${serviceEmail()}`}
+              className="link-inline break-all"
+            >
+              {serviceEmail()}
+            </a>
+          </TermRow>
+        </dl>
+      </div>
+
+      <div>
+        <label
+          htmlFor={ackId}
+          className="flex cursor-pointer items-start gap-3 rounded-[var(--radius-md)] border border-forest-deep/15 bg-paper p-4 text-[0.9375rem] text-forest-deep"
+        >
+          <input
+            id={ackId}
+            type="checkbox"
+            checked={accepted}
+            onChange={(e) => onAccept(e.target.checked)}
+            required
+            aria-invalid={ackError ? true : undefined}
+            aria-describedby={ackError ? `${ackId}-error` : undefined}
+            className="mt-0.5 h-5 w-5 shrink-0 accent-forest"
+          />
+          <span>
+            I have reviewed my order and agree to the{" "}
+            <Link to="/terms" target="_blank" className="link-inline">
+              Terms &amp; Conditions
+              <span className="sr-only"> (opens in a new tab)</span>
+            </Link>{" "}
+            and{" "}
+            <Link to="/refunds" target="_blank" className="link-inline">
+              Refund &amp; Cancellation Policy
+              <span className="sr-only"> (opens in a new tab)</span>
+            </Link>
+            .
+          </span>
+        </label>
+        {ackError && (
+          <p id={`${ackId}-error`} className="field-error">
+            {ackError}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function TermRow({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="grid gap-1 border-b border-forest-deep/10 pb-3 sm:grid-cols-[11rem_1fr] sm:gap-4">
+      <dt className="font-semibold text-forest-deep">{label}</dt>
+      <dd className="text-muted-light">{children}</dd>
     </div>
   );
 }

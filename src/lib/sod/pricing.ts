@@ -6,6 +6,10 @@ import { z } from "zod";
  * Sod is $4.20/roll plus 13% HST. Delivery is $1.50 per km of the full
  * round trip: Guelph base → sod farm → customer → Guelph base.
  * All maths is done in integer cents; route km is rounded to 0.1 km.
+ *
+ * BLOCKER: ACCOUNTANT TO CONFIRM HST TREATMENT OF SOD + DELIVERY BEFORE PAID
+ * CHECKOUT GOES LIVE. This formula is not asserted to be the correct tax
+ * treatment. Record the accountant's sign-off in TAX_REVIEW (src/lib/legal.ts).
  */
 export { SOD_PRODUCT } from "@/lib/sod/product";
 

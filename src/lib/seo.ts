@@ -58,6 +58,25 @@ export function seo({
   };
 }
 
+/** head() for the legal pages: indexable, canonical, with a breadcrumb. */
+export function legalSeo(input: {
+  title: string;
+  description: string;
+  path: string;
+}) {
+  return seo({
+    title: `${input.title} | SilverScape Solutions`,
+    description: input.description,
+    path: input.path,
+    jsonLd: [
+      breadcrumbSchema([
+        { name: "Home", path: "/" },
+        { name: input.title, path: input.path },
+      ]),
+    ],
+  });
+}
+
 const BUSINESS_ID = `${SITE_URL || ""}/#business`;
 
 export const AREA_SERVED = [

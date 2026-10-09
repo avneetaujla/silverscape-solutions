@@ -130,8 +130,8 @@ export async function computeDeliveryRoute(customer: {
   return {
     totalKm: route.distanceMeters / 1000,
     legs: [
-      { label: "Guelph base → sod farm", km: km(legs[0].distanceMeters) },
-      { label: "Sod farm → your address", km: km(legs[1].distanceMeters) },
+      { label: "Guelph base → pickup", km: km(legs[0].distanceMeters) },
+      { label: "Pickup → your address", km: km(legs[1].distanceMeters) },
       { label: "Your address → Guelph base", km: km(legs[2].distanceMeters) },
     ],
   };

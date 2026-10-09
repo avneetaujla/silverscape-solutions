@@ -1,20 +1,27 @@
 # SilverScape — launch checklist
 
-Everything that still needs a real-world input before (or soon after) launch.
-The code is production-ready; the items below are content, credentials and
-owner confirmations.
+Everything that still needs a real-world input before (or soon after) launch:
+content, credentials and owner confirmations.
+
+**Legal and compliance blockers are tracked separately in
+`docs/COMPLIANCE_CHECKLIST.md` §0.** For live paid sod checkout only, they
+include the business premises address, accountant HST confirmation,
+undecided sod delivery rules, and Stripe/Resend production setup. The code
+refuses a live Stripe key while they're open. They don't block the public
+site, quote requests or contact forms.
 
 ## 1. Launch blockers
 
 | # | Item | Why it blocks | Where |
 |---|------|---------------|-------|
+| 0 | Everything in `docs/COMPLIANCE_CHECKLIST.md` §0 (live paid sod checkout only) | Legal and consumer-protection requirements | `src/lib/legal.ts` |
 | 1 | `GOOGLE_MAPS_API_KEY` | Without it the sod portal can't price delivery; customers see "call us". | Netlify env |
 | 2 | `STRIPE_SECRET_KEY` (live) | Without it online sod payment is disabled. | Netlify env |
 | 3 | `RESEND_API_KEY` + `LEAD_FROM_EMAIL` on a verified domain, and/or `LEAD_WEBHOOK_URL` | Without a delivery channel the quote form shows an error instead of accepting leads. | Netlify env |
 | 4 | `VITE_SITE_URL` | Canonical URLs, sitemap and social tags use it. | Netlify env |
 | 5 | Confirm the sod farm pickup address | The brief named "Greenhorizons Sod Farms, Kitchener". Greenhorizons' nearest location is **1625 Kossuth Road, Cambridge** (519-653-7494); no Kitchener site was found. The default is the Cambridge address. Set `SOD_FARM_ADDRESS` if it's different. | Netlify env |
 | 6 | Confirm trust statements (section 6) | They are factual claims made on SilverScape's behalf. | Copy |
-| 7 | Replace the P1 photos (section 3) | The homepage and sod portal currently use reference imagery. | `media-src/` |
+| 7 | Replace the P1 photos (section 3) | Not a current blocker, per the owner (2026-10-09). The homepage and sod portal use reference imagery, which is never presented as SilverScape work. | `media-src/` |
 
 ## 2. Environment variables
 
@@ -28,13 +35,14 @@ Set these in **Netlify → Site configuration → Environment variables**.
 | `SOD_BASE_ADDRESS` | No | Default `189 Stephanie Drive, Guelph, ON, Canada`. |
 | `SOD_FARM_ADDRESS` | No | Default Greenhorizons, Cambridge (see blocker 5). |
 | `SOD_MAX_ROUTE_KM` | No | Refuses online orders above this total route length. |
-| `STRIPE_SECRET_KEY` | Yes (sod) | `sk_test_…` on deploy previews, `sk_live_…` in production. |
-| `RESEND_API_KEY` | One of email/webhook | Lead email delivery. |
-| `LEAD_NOTIFICATION_EMAIL` | With Resend | Comma-separated recipients. |
-| `LEAD_FROM_EMAIL` | With Resend | Must be on a Resend-verified domain. |
+| `STRIPE_SECRET_KEY` | Yes (sod) | `sk_test_…` on deploy previews, `sk_live_…` in production. A live key is refused while compliance blockers remain. |
+| `STRIPE_WEBHOOK_SECRET` | Yes (live sod) | Signing secret of the `/api/stripe-webhook` endpoint (section 5). Required for the order confirmation email; live checkout is refused without it. |
+| `RESEND_API_KEY` | One of email/webhook; required for live sod | Lead email delivery and sod order confirmations. |
+| `LEAD_NOTIFICATION_EMAIL` | With Resend | Comma-separated recipients. Also receives a copy of each sod order. |
+| `LEAD_FROM_EMAIL` | With Resend | Must be on a Resend-verified domain. Also the sender of order confirmations. |
 | `LEAD_WEBHOOK_URL` / `LEAD_WEBHOOK_SECRET` | One of email/webhook | JSON POST to a CRM, Zapier or Make. |
-| `VITE_GA4_MEASUREMENT_ID` | No | Analytics loads only when set. |
-| `VITE_META_PIXEL_ID` | No | Pixel loads only when set. |
+| `VITE_GA4_MEASUREMENT_ID` | No | Analytics loads only when set **and** the visitor allows analytics cookies. Setting it shows the cookie banner. |
+| `VITE_META_PIXEL_ID` | No | Pixel loads only when set **and** the visitor allows marketing cookies. In Meta Events Manager, turn **off** Automatic Advanced Matching. |
 
 ## 3. Image replacement checklist
 
@@ -129,10 +137,18 @@ Not legally required, but recorded in each catalog entry's `attribution`:
 - Line items: sod (`rolls × $4.20 + 13% HST`) and delivery (`route km × $1.50`).
 - Success returns to `/sod-ordering/confirmation?session_id=…`, which reads the
   session from Stripe. Cancel returns to `/sod-ordering?checkout=cancelled`.
-- **Enable Stripe's "Successful payments" email notifications** for the owner.
-  No webhook is implemented yet, so Stripe's dashboard and emails are the
-  order record. A `checkout.session.completed` webhook is a recommended follow-up.
-- Before going live, run a full test order with `sk_test_…` on a deploy preview.
+- **Webhook (required for live payments).** In Stripe → Developers →
+  Webhooks, add `https://<your-domain>/api/stripe-webhook` with the events
+  `checkout.session.completed` and `checkout.session.async_payment_succeeded`.
+  Copy its signing secret into `STRIPE_WEBHOOK_SECRET`. The webhook emails the
+  customer a written copy of the order (CPA internet-agreement requirement)
+  and sends a copy to `LEAD_NOTIFICATION_EMAIL`. Do this once for test mode
+  and once for live mode; each has its own secret.
+- Also **enable Stripe's customer receipts** and the owner's "Successful
+  payments" notifications as a backup record.
+- Before going live, run a full test order with `sk_test_…` on a deploy
+  preview. Confirm both emails arrive and the confirmation page shows the
+  order reference.
 
 ## 6. Trust statements to confirm with the owner
 
@@ -146,7 +162,7 @@ Remove or reword any that aren't accurate.
   practice and building code for each municipality.
 - The process steps (site walk, written itemized proposal, utility locates
   arranged before digging) on the homepage, About and city pages.
-- Phone `(226) 500-4608`, email `silverscapesolutions@gmail.com`, and "Based in
+- Phone `226-500-4608` and email `silverscapesolutions@gmail.com` (confirmed 2026-10-09), and "Based in
   Guelph, Ontario" (`src/lib/site.ts`).
 
 No testimonials, ratings, years in business, project counts, certifications or
@@ -174,4 +190,7 @@ guarantees are claimed anywhere. Keep it that way until they're real.
 - Several `@radix-ui/*` packages in `package.json` are no longer imported
   after the unused shadcn components were removed. Prune them with a quick
   `npm uninstall` pass and a rebuild.
-- Add a Stripe webhook for order notifications (section 5).
+- CSP still allows `'unsafe-inline'` scripts (TanStack hydration data and
+  JSON-LD). Moving to nonces would tighten it.
+- Rate limiting is in memory per function instance. For stronger protection,
+  add Netlify's rate-limiting rules or a WAF.

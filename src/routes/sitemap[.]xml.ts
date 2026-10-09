@@ -14,6 +14,11 @@ const STATIC_PATHS = [
   "/resources",
   "/about",
   "/contact",
+  "/privacy",
+  "/terms",
+  "/cookies",
+  "/refunds",
+  "/accessibility",
 ];
 
 function escapeXml(s: string) {

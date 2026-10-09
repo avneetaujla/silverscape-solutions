@@ -57,7 +57,7 @@ function OutdoorHub() {
         },
         {
           t: "Built for Ontario",
-          d: "Frost-depth footings, compacted bases and plant choices suited to freeze-thaw and clay soils.",
+          d: "Foundations, bases and plant choices planned for freeze-thaw and clay soils.",
         },
       ]}
       articleSlugs={[

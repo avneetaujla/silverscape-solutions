@@ -52,7 +52,7 @@ function InteriorHub() {
         },
         {
           t: "Selections up front",
-          d: "Tile, flooring and fixtures chosen before demolition, so lead times never stall the project.",
+          d: "Tile, flooring and fixtures chosen before demolition, so material lead times are less likely to hold up the project.",
         },
         {
           t: "A livable home",

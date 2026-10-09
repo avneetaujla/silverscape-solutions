@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import { useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { CheckCircle2, Loader2, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/lib/leads/lead-schema";
 import { submitLead } from "@/lib/leads/leads.functions";
 import { trackEvent } from "@/lib/analytics";
+import { MARKETING_CONSENT, marketingConsentAvailable } from "@/lib/legal";
 import { BUSINESS } from "@/lib/site";
 import { typeset } from "@/lib/typeset";
 import { cn } from "@/lib/utils";
@@ -32,7 +33,7 @@ type Status =
   | { state: "success"; name: string }
   | {
       state: "error";
-      reason: "not_configured" | "delivery_failed" | "network";
+      reason: "not_configured" | "delivery_failed" | "network" | "rate_limited";
     };
 
 const FIELD_ORDER: FieldName[] = [
@@ -73,6 +74,9 @@ export function LeadForm({
     description: "",
   });
   const [honeypot, setHoneypot] = useState("");
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
+  const startedTracked = useRef(false);
+  const showMarketing = marketingConsentAvailable();
   const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
   const [attempted, setAttempted] = useState(false);
   const [status, setStatus] = useState<Status>({ state: "idle" });
@@ -98,6 +102,7 @@ export function LeadForm({
       division: v.division as Division,
       timing: v.timing as LeadInput["timing"],
       website: honeypot,
+      marketingOptIn: showMarketing && marketingOptIn,
       elapsedMs: Math.max(0, Date.now() - startedAt.current),
       pagePath: pathname,
     };
@@ -115,6 +120,10 @@ export function LeadForm({
   }
 
   function update(field: FieldName, value: string) {
+    if (!startedTracked.current) {
+      startedTracked.current = true;
+      trackEvent("quote_started", { form_location: pathname });
+    }
     const next = { ...values, [field]: value };
     if (field === "division") next.service = "";
     setValues(next);
@@ -140,10 +149,9 @@ export function LeadForm({
     try {
       const res = await submitLead({ data: buildPayload(values) });
       if (res.ok) {
-        trackEvent("generate_lead", {
+        trackEvent("quote_submitted", {
           division: values.division,
           service: values.service,
-          city: values.city,
           form_location: pathname,
         });
         setStatus({ state: "success", name: values.name.split(" ")[0] });
@@ -151,8 +159,8 @@ export function LeadForm({
         setStatus({
           state: "error",
           reason:
-            res.code === "not_configured"
-              ? "not_configured"
+            res.code === "not_configured" || res.code === "rate_limited"
+              ? res.code
               : "delivery_failed",
         });
       }
@@ -207,8 +215,7 @@ export function LeadForm({
           id={id("intro")}
           className="mt-2 text-sm text-muted-dark [.on-light_&]:text-muted-light"
         >
-          All fields are required. We use your details only to respond to this
-          request.
+          All fields are required unless marked optional.
         </p>
       </div>
 
@@ -222,7 +229,9 @@ export function LeadForm({
           <p className="font-semibold">
             {status.reason === "network"
               ? "We couldn't send your request — please check your connection and try again."
-              : "Our online form isn't able to send requests right now."}
+              : status.reason === "rate_limited"
+                ? "We've received several requests from this connection. Please wait a few minutes and try again."
+                : "Our online form isn't able to send requests right now."}
           </p>
           <p className="mt-1">
             Please reach us directly:{" "}
@@ -413,6 +422,33 @@ export function LeadForm({
         </label>
       </div>
 
+      {showMarketing && (
+        <label className="flex items-start gap-3 text-sm">
+          <input
+            type="checkbox"
+            name="marketingOptIn"
+            checked={marketingOptIn}
+            onChange={(e) => setMarketingOptIn(e.target.checked)}
+            className="mt-0.5 h-5 w-5 shrink-0 accent-gold [.on-light_&]:accent-forest"
+          />
+          <span className="text-muted-dark [.on-light_&]:text-muted-light">
+            {MARKETING_CONSENT.wording}
+          </span>
+        </label>
+      )}
+
+      <p
+        id={id("privacy")}
+        className="text-sm text-muted-dark [.on-light_&]:text-muted-light"
+      >
+        SilverScape Solutions will use the information you provide to respond to
+        your inquiry and manage your requested services. See our{" "}
+        <Link to="/privacy" className="link-inline">
+          Privacy Policy
+        </Link>
+        .
+      </p>
+
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <Button
           type="submit"
@@ -420,6 +456,7 @@ export function LeadForm({
           variant={tone === "light" ? "forest" : "default"}
           disabled={submitting}
           aria-disabled={submitting}
+          aria-describedby={id("privacy")}
           className="w-full sm:w-auto"
         >
           {submitting ? (

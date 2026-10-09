@@ -9,10 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './src/routes/__root'
+import { Route as TermsRouteImport } from './src/routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './src/routes/sitemap[.]xml'
 import { Route as RobotsDottxtRouteImport } from './src/routes/robots[.]txt'
+import { Route as RefundsRouteImport } from './src/routes/refunds'
+import { Route as PrivacyRouteImport } from './src/routes/privacy'
 import { Route as PortfolioRouteImport } from './src/routes/portfolio'
+import { Route as CookiesRouteImport } from './src/routes/cookies'
 import { Route as ContactRouteImport } from './src/routes/contact'
+import { Route as AccessibilityRouteImport } from './src/routes/accessibility'
 import { Route as AboutRouteImport } from './src/routes/about'
 import { Route as IndexRouteImport } from './src/routes/index'
 import { Route as SodOrderingIndexRouteImport } from './src/routes/sod-ordering.index'
@@ -25,7 +30,13 @@ import { Route as ServiceAreasCityRouteImport } from './src/routes/service-areas
 import { Route as ResourcesSlugRouteImport } from './src/routes/resources.$slug'
 import { Route as OutdoorServicesServiceRouteImport } from './src/routes/outdoor-services.$service'
 import { Route as InteriorRenovationsServiceRouteImport } from './src/routes/interior-renovations.$service'
+import { Route as ApiStripeWebhookRouteImport } from './src/routes/api.stripe-webhook'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -36,14 +47,34 @@ const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RefundsRoute = RefundsRouteImport.update({
+  id: '/refunds',
+  path: '/refunds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PortfolioRoute = PortfolioRouteImport.update({
   id: '/portfolio',
   path: '/portfolio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccessibilityRoute = AccessibilityRouteImport.update({
+  id: '/accessibility',
+  path: '/accessibility',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -108,14 +139,25 @@ const InteriorRenovationsServiceRoute =
     path: '/interior-renovations/$service',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiStripeWebhookRoute = ApiStripeWebhookRouteImport.update({
+  id: '/api/stripe-webhook',
+  path: '/api/stripe-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/accessibility': typeof AccessibilityRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/portfolio': typeof PortfolioRoute
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
+  '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/interior-renovations/$service': typeof InteriorRenovationsServiceRoute
   '/outdoor-services/$service': typeof OutdoorServicesServiceRoute
   '/resources/$slug': typeof ResourcesSlugRoute
@@ -130,10 +172,16 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/accessibility': typeof AccessibilityRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/portfolio': typeof PortfolioRoute
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
+  '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/interior-renovations/$service': typeof InteriorRenovationsServiceRoute
   '/outdoor-services/$service': typeof OutdoorServicesServiceRoute
   '/resources/$slug': typeof ResourcesSlugRoute
@@ -149,10 +197,16 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/accessibility': typeof AccessibilityRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/portfolio': typeof PortfolioRoute
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
+  '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/interior-renovations/$service': typeof InteriorRenovationsServiceRoute
   '/outdoor-services/$service': typeof OutdoorServicesServiceRoute
   '/resources/$slug': typeof ResourcesSlugRoute
@@ -169,10 +223,16 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/accessibility'
     | '/contact'
+    | '/cookies'
     | '/portfolio'
+    | '/privacy'
+    | '/refunds'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/terms'
+    | '/api/stripe-webhook'
     | '/interior-renovations/$service'
     | '/outdoor-services/$service'
     | '/resources/$slug'
@@ -187,10 +247,16 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/accessibility'
     | '/contact'
+    | '/cookies'
     | '/portfolio'
+    | '/privacy'
+    | '/refunds'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/terms'
+    | '/api/stripe-webhook'
     | '/interior-renovations/$service'
     | '/outdoor-services/$service'
     | '/resources/$slug'
@@ -205,10 +271,16 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/accessibility'
     | '/contact'
+    | '/cookies'
     | '/portfolio'
+    | '/privacy'
+    | '/refunds'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/terms'
+    | '/api/stripe-webhook'
     | '/interior-renovations/$service'
     | '/outdoor-services/$service'
     | '/resources/$slug'
@@ -224,10 +296,16 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AccessibilityRoute: typeof AccessibilityRoute
   ContactRoute: typeof ContactRoute
+  CookiesRoute: typeof CookiesRoute
   PortfolioRoute: typeof PortfolioRoute
+  PrivacyRoute: typeof PrivacyRoute
+  RefundsRoute: typeof RefundsRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TermsRoute: typeof TermsRoute
+  ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
   InteriorRenovationsServiceRoute: typeof InteriorRenovationsServiceRoute
   OutdoorServicesServiceRoute: typeof OutdoorServicesServiceRoute
   ResourcesSlugRoute: typeof ResourcesSlugRoute
@@ -242,6 +320,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -256,6 +341,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/refunds': {
+      id: '/refunds'
+      path: '/refunds'
+      fullPath: '/refunds'
+      preLoaderRoute: typeof RefundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/portfolio': {
       id: '/portfolio'
       path: '/portfolio'
@@ -263,11 +362,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortfolioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accessibility': {
+      id: '/accessibility'
+      path: '/accessibility'
+      fullPath: '/accessibility'
+      preLoaderRoute: typeof AccessibilityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -354,16 +467,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InteriorRenovationsServiceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/stripe-webhook': {
+      id: '/api/stripe-webhook'
+      path: '/api/stripe-webhook'
+      fullPath: '/api/stripe-webhook'
+      preLoaderRoute: typeof ApiStripeWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AccessibilityRoute: AccessibilityRoute,
   ContactRoute: ContactRoute,
+  CookiesRoute: CookiesRoute,
   PortfolioRoute: PortfolioRoute,
+  PrivacyRoute: PrivacyRoute,
+  RefundsRoute: RefundsRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TermsRoute: TermsRoute,
+  ApiStripeWebhookRoute: ApiStripeWebhookRoute,
   InteriorRenovationsServiceRoute: InteriorRenovationsServiceRoute,
   OutdoorServicesServiceRoute: OutdoorServicesServiceRoute,
   ResourcesSlugRoute: ResourcesSlugRoute,

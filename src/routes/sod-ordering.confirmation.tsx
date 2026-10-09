@@ -5,7 +5,7 @@ import { Section } from "@/components/site/Section";
 import { CTA } from "@/components/site/CTA";
 import { BUSINESS } from "@/lib/site";
 import { seo } from "@/lib/seo";
-import { trackEvent } from "@/lib/analytics";
+import { hasTrackingConsent, trackEvent } from "@/lib/analytics";
 import { formatCents } from "@/lib/sod/pricing";
 import { getSodOrderStatus } from "@/lib/sod/sod.functions";
 
@@ -41,6 +41,7 @@ function ConfirmationPage() {
 
   useEffect(() => {
     if (!status.found || !status.paid || !sessionId) return;
+    if (!hasTrackingConsent()) return;
     const key = `sss_purchase_${sessionId}`;
     try {
       if (sessionStorage.getItem(key)) return;
@@ -48,7 +49,7 @@ function ConfirmationPage() {
     } catch {
       // Storage unavailable: still report once per page load.
     }
-    trackEvent("purchase", {
+    trackEvent("sod_order_completed", {
       transaction_id: sessionId,
       value: status.totalCents / 100,
       currency: "CAD",
@@ -72,10 +73,10 @@ function ConfirmationPage() {
             <p className="type-lead mt-4 text-muted-light">
               Thank you. Payment was received and we'll contact you to confirm a
               delivery date.
-              {status.email && (
+              {status.email && status.confirmationEmail && (
                 <>
                   {" "}
-                  A receipt has been sent to{" "}
+                  A written copy of your order is being emailed to{" "}
                   <strong className="text-forest-deep">{status.email}</strong>.
                 </>
               )}
@@ -108,6 +109,16 @@ function ConfirmationPage() {
               </div>
             </dl>
             <p className="mt-6 text-sm text-muted-light">
+              Order reference:{" "}
+              <span className="break-all text-forest-deep">{sessionId}</span>.
+              Please keep this page or your email for your records.
+              Cancellations and refunds are handled under our{" "}
+              <Link to="/refunds" className="link-inline">
+                Refund &amp; Cancellation Policy
+              </Link>
+              .
+            </p>
+            <p className="mt-3 text-sm text-muted-light">
               Questions about your delivery? Call{" "}
               <a href={BUSINESS.phoneHref} className="link-inline">
                 {BUSINESS.phoneDisplay}
@@ -138,8 +149,9 @@ function ConfirmationPage() {
               Your payment is processing.
             </h1>
             <p className="type-lead mt-4 text-muted-light">
-              Stripe hasn't confirmed the payment yet. You'll receive an email
-              receipt once it completes. If you don't, call us at{" "}
+              Stripe hasn't confirmed the payment yet. Once it does, we&rsquo;ll
+              be in touch to confirm your order. If you don&rsquo;t hear from
+              us, call{" "}
               <a href={BUSINESS.phoneHref} className="link-inline">
                 {BUSINESS.phoneDisplay}
               </a>
@@ -152,7 +164,7 @@ function ConfirmationPage() {
               We couldn't find that order.
             </h1>
             <p className="type-lead mt-4 text-muted-light">
-              If you've just paid, check your email for a Stripe receipt, or
+              If you&rsquo;ve just paid, check your email for a confirmation, or
               contact us at{" "}
               <a href={BUSINESS.phoneHref} className="link-inline">
                 {BUSINESS.phoneDisplay}

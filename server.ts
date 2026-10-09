@@ -2,6 +2,7 @@ import "./src/lib/error-capture";
 
 import { consumeLastCapturedError } from "./src/lib/error-capture";
 import { renderErrorPage } from "./src/lib/error-page";
+import { withSecurityHeaders } from "./src/lib/security-headers";
 
 type ServerEntry = {
   fetch: (
@@ -79,15 +80,19 @@ async function normalizeCatastrophicSsrResponse(
   return brandedErrorResponse();
 }
 
+// Dev keeps Vite's HMR client working without CSP exceptions.
+const secure = (response: Response) =>
+  import.meta.env.PROD ? withSecurityHeaders(response) : response;
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return secure(await normalizeCatastrophicSsrResponse(response));
     } catch (error) {
       console.error(error);
-      return brandedErrorResponse();
+      return secure(brandedErrorResponse());
     }
   },
 };

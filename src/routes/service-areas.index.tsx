@@ -45,7 +45,7 @@ function ServiceAreasPage() {
           <>
             Based in Guelph.{" "}
             <span className="accent-serif">
-              Working across Southern Ontario.
+              Serving selected communities across Southern Ontario.
             </span>
           </>
         }
@@ -70,7 +70,7 @@ function ServiceAreasPage() {
           id="core"
           eyebrow="Guelph & Waterloo Region"
           title="Our home markets"
-          description="Closest to our base and the sod farm on our delivery route — outdoor, interior and sod delivery all available."
+          description="Closest to our Guelph base — outdoor, interior and sod delivery are all available."
         />
         <ul className="mt-10 grid gap-6 md:grid-cols-2">
           {core.map((l) => (

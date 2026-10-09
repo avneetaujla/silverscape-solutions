@@ -5,3 +5,13 @@
 [dev]
   command = "npm run dev"
   port = 3000
+
+# Static assets. Server-rendered pages also get a Content-Security-Policy
+# from src/lib/security-headers.ts (applied in server.ts).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+    X-Frame-Options = "DENY"
